@@ -72,7 +72,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
             define("CDN_URL",BASE_URL."GoldenTradeValue-CDN/app/");
 
             define("INDEX_PAGE", APP_URL.'index.php/');
-            define("DEFAULTROUTER", 'user/login');
+            define("DEFAULTROUTER", 'demo');
 
             define("HOSTNAME", 'labs26.com');
             define("USERNAME", 'labs26');
@@ -94,7 +94,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 
               define("HOSTNAME", 'labs26.com');
               define("USERNAME", 'labs26');
-              define("PASSWORD", '12345aeiou');
+              define("PASSWORD", 'demo');
               define("DATABASE", 'labs26');
           //----->
           }else{
@@ -108,7 +108,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
                 define("CDN_URL",BASE_URL."cdn/");
       
                 define("INDEX_PAGE", APP_URL.'index.php/');
-                define("DEFAULTROUTER", 'user/login');
+                define("DEFAULTROUTER", 'demo');
 
                 define("HOSTNAME", 'labs26.com');
                 define("USERNAME", 'labs26');
