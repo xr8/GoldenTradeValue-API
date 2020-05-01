@@ -52,12 +52,12 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 
     define("ZONA", 'ngrok');
     define("PAGETITLE", 'Local Ngrok: ');
-  
+
     }else{
-  
+
       define("ZONA", 'web');
       define("PAGETITLE", 'Remote : ');
-  
+
       }
 
 //Config Local o Web
@@ -66,7 +66,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
           define("TITLE", PAGETITLE ." Money offline - ");
 
           define("BASE_URL", '//'.$_SERVER['HTTP_HOST'].'/server/DevOps/GoldenTradeValue/');
-                
+
             define("APP_URL",BASE_URL."GoldenTradeValue-APP/");
             define("API_URL",BASE_URL."GoldenTradeValue-API/");
             define("CDN_URL",BASE_URL."GoldenTradeValue-CDN/app/");
@@ -84,11 +84,11 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
             define("TITLE", PAGETITLE ." Money ngrok - ");
 
             define("BASE_URL", '//'.$_SERVER['HTTP_HOST'].'/server/DevOps/GoldenTradeValue/');
-            
+
               define("APP_URL",BASE_URL."GoldenTradeValue-APP/");
               define("API_URL",BASE_URL."GoldenTradeValue-API/");
               define("CDN_URL",BASE_URL."GoldenTradeValue-CDN/app/");
-    
+
               define("INDEX_PAGE", APP_URL.'index.php/');
               define("DEFAULTROUTER", 'user/login');
 
@@ -101,18 +101,18 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
             //----->
               define("TITLE", PAGETITLE ." Money online - ");
 
-              define("BASE_URL", '');
-              
-                define("APP_URL",BASE_URL."app/");
-                define("API_URL",BASE_URL."api/");
-                define("CDN_URL",BASE_URL."cdn/");
-      
-                define("INDEX_PAGE", APP_URL.'index.php/');
-                define("DEFAULTROUTER", 'demo');
+              define("BASE_URL", 'gtvsa.com');
+
+                define("APP_URL","//app.".BASE_URL."/");
+                define("API_URL","//api.".BASE_URL."/");
+                define("CDN_URL","//cdn.".BASE_URL."/");
+
+                define("INDEX_PAGE", API_URL.'');
+                define("DEFAULTROUTER", 'user/login');
 
                 define("HOSTNAME", 'labs26.com');
                 define("USERNAME", 'labs26');
                 define("PASSWORD", '12345aeiou');
                 define("DATABASE", 'labs26');
-            //----->              
+            //----->
             }
