@@ -17,12 +17,12 @@
             INSERT INTO `log` (`id_advance`) VALUES ('134365578098ouikgtdf')
             */
 
-            $response = file_get_contents('http://worldtimeapi.org/api/timezone/America/Mexico_City');      
+            $response = file_get_contents('http://worldtimeapi.org/api/timezone/America/Mexico_City');
             $obj = json_decode($response);
 
             $data['id_advance'] = random_string('alpha', 20);
             $data['time']       = $obj->{'datetime'};
-            
+
                 $this->db->insert('log', $data);
 
                     $status = "[OK: new record log]";
@@ -32,7 +32,7 @@
 
         //--->
         function userRead($id_advance,$all){
-            
+
             /*
             SELECT
             `user`.id,
@@ -47,7 +47,7 @@
             FROM
             `user`
             WHERE
-            `user`.id_advance = 'CLjFxfEC16HE9AZ948Ws'            
+            `user`.id_advance = 'CLjFxfEC16HE9AZ948Ws'
             */
 
             //---A)
@@ -62,17 +62,23 @@
             `user`.telefono,
             `user`.puesto
                 ');
-            $this->db->from('user'); 
+            $this->db->from('user');
 
             /*all o single*/
             if ($all == true) {
+
+                $this->db->where('user.`activo`','true');
+
                 }else{
+
                     $this->db->where('user.`id_advance`',$id_advance);
+                    $this->db->where('user.`activo`','true');
+
                     }
 
                 $query = $this->db->get();
                 $row = $query->row_array();
-            //---A)                
+            //---A)
 
                 if ($query->num_rows() > 0) {
                     foreach ($query->result() as $row) {
@@ -82,7 +88,7 @@
                         return $data;
                     }
 
-		  }
+        }
         //--->
 
         //--->
@@ -90,12 +96,13 @@
 
             /*
             INSERT INTO `labs26`.`user`
-            (`id`, `id_advance`, `time`, `user`, `permissions`, `email`, `firstname`, `secondname`) 
+            (`id`, `id_advance`, `time`, `user`, `permissions`, `email`, `firstname`, `secondname`)
             VALUES (4, '5exr6ctyuiox6crtyui', '2020-04-29 16:07:47', 'demo', 'vendedor', 'vendedor2@empresa.com', 'jose', 'martin')
             */
             $data = array(
                 'id_advance' => random_string('sha1', 20),
                 'time'       => date("Y-m-d H:m:s"),
+                'activo'     => "true",
                 'user'       => $_POST['user'],
                 'permissions'=> $_POST['permissions'],
                 'email'      => $_POST['email'],
@@ -104,19 +111,19 @@
                 'secondname' => $_POST['second'],
                 'telefono'   => $_POST['tel'],
                 'puesto'     => $_POST['puesto']
-            );            
+            );
 
             $this->db->insert('user', $data);
 
                     //--->Mostrar Info de la tienda
                     /*
                     $this->db->select('*');
-                        
+
                     $this->db->from('negocios_mitienda');
                     $this->db->where ('negocios_mitienda.mtda_correo',$_POST['email']);
 
                     $query = $this->db->get();
-                    
+
                         if ($query->num_rows() > 0) {
                             foreach ($query->result() as $row) {$data[] = $row;}
                                 return $data;
@@ -138,16 +145,16 @@
 
             /*
             INSERT INTO `labs26`.`user`
-            (`id`, `id_advance`, `time`, `user`, `permissions`, `email`, `firstname`, `secondname`) 
+            (`id`, `id_advance`, `time`, `user`, `permissions`, `email`, `firstname`, `secondname`)
             VALUES (4, '5exr6ctyuiox6crtyui', '2020-04-29 16:07:47', 'demo', 'vendedor', 'vendedor2@empresa.com', 'jose', 'martin')
                                         /*
-            Array ( 
-            [user] => admin 
-            [permissions] => administrador 
-            [email] => biohizard@gmail.com 
-            [first] => jorge 
-            [second] => garibaldo 
-            [tel] => 55555 
+            Array (
+            [user] => admin
+            [permissions] => administrador
+            [email] => biohizard@gmail.com
+            [first] => jorge
+            [second] => garibaldo
+            [tel] => 55555
             [puesto] => vendedor )
             */
             if (empty($_POST['password'])){
@@ -160,7 +167,7 @@
                     'secondname' => $_POST['second'],
                     'telefono'   => $_POST['tel'],
                     'puesto'     => $_POST['puesto']
-                    );                  
+                    );
                 }else{
                     $data = array(
 
@@ -172,22 +179,22 @@
                         'secondname' => $_POST['second'],
                         'telefono'   => $_POST['tel'],
                         'puesto'     => $_POST['puesto']
-                        );                      
-                    } 
-          
-            
+                        );
+                    }
+
+
             $this->db->where('id_advance',$_POST['id_advance']);
             $this->db->update('user', $data);
 
                     //--->Mostrar Info de la tienda
                     /*
                     $this->db->select('*');
-                        
+
                     $this->db->from('negocios_mitienda');
                     $this->db->where ('negocios_mitienda.mtda_correo',$_POST['email']);
 
                     $query = $this->db->get();
-                    
+
                         if ($query->num_rows() > 0) {
                             foreach ($query->result() as $row) {$data[] = $row;}
                                 return $data;
@@ -201,9 +208,23 @@
                         //return $status;
                         $status = "[OK: 1]";
                         return    $status;
-            }
 
 
         //--->
+        }
+
+        function socios_borrar(){
+
+              $data = array('activo'=> 'false');
+
+                $this->db->where('id_advance',$_POST['id_advance']);
+                $this->db->update('user', $data);
+
+                    //return $status;
+                    $status = "[OK: 1]";
+                    return    $status;
+            }
+        //--->
+
         }
 /* End of file database.php */

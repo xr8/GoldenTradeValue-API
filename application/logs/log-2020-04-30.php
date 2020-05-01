@@ -6005,3 +6005,53 @@ ERROR - 2020-04-30 20:02:53 --> Query error: MySQL server has gone away - Invali
 INFO - 2020-04-30 20:02:54 --> Language file loaded: language/english/db_lang.php
 INFO - 2020-04-30 20:03:02 --> Final output sent to browser
 INFO - 2020-04-30 20:03:02 --> Total execution time: 59.9263
+INFO - 2020-04-30 20:51:33 --> Config Class Initialized
+INFO - 2020-04-30 20:51:33 --> Hooks Class Initialized
+INFO - 2020-04-30 20:51:33 --> UTF-8 Support Enabled
+INFO - 2020-04-30 20:51:33 --> Utf8 Class Initialized
+INFO - 2020-04-30 20:51:33 --> URI Class Initialized
+INFO - 2020-04-30 20:51:33 --> Router Class Initialized
+INFO - 2020-04-30 20:51:34 --> Output Class Initialized
+INFO - 2020-04-30 20:51:34 --> Security Class Initialized
+INFO - 2020-04-30 20:51:34 --> Input Class Initialized
+INFO - 2020-04-30 20:51:34 --> Language Class Initialized
+INFO - 2020-04-30 20:51:34 --> Loader Class Initialized
+INFO - 2020-04-30 20:51:34 --> Helper loaded: url_helper
+INFO - 2020-04-30 20:51:34 --> Helper loaded: string_helper
+INFO - 2020-04-30 20:51:34 --> Helper loaded: date_helper
+INFO - 2020-04-30 20:51:34 --> Helper loaded: array_helper
+INFO - 2020-04-30 20:51:35 --> Helper loaded: security_helper
+INFO - 2020-04-30 20:51:35 --> Helper loaded: text_helper
+INFO - 2020-04-30 20:51:35 --> Helper loaded: session_helper
+INFO - 2020-04-30 20:51:35 --> Controller Class Initialized
+INFO - 2020-04-30 20:51:35 --> Database Driver Class Initialized
+INFO - 2020-04-30 20:51:35 --> Database Driver Class Initialized
+INFO - 2020-04-30 20:51:36 --> Model Class Initialized
+INFO - 2020-04-30 20:51:36 --> Model Class Initialized
+INFO - 2020-04-30 20:51:39 --> Final output sent to browser
+INFO - 2020-04-30 20:51:39 --> Total execution time: 5.9746
+INFO - 2020-04-30 20:51:39 --> Config Class Initialized
+INFO - 2020-04-30 20:51:39 --> Hooks Class Initialized
+INFO - 2020-04-30 20:51:39 --> UTF-8 Support Enabled
+INFO - 2020-04-30 20:51:39 --> Utf8 Class Initialized
+INFO - 2020-04-30 20:51:39 --> URI Class Initialized
+INFO - 2020-04-30 20:51:39 --> Router Class Initialized
+INFO - 2020-04-30 20:51:39 --> Output Class Initialized
+INFO - 2020-04-30 20:51:39 --> Security Class Initialized
+INFO - 2020-04-30 20:51:39 --> Input Class Initialized
+INFO - 2020-04-30 20:51:39 --> Language Class Initialized
+INFO - 2020-04-30 20:51:39 --> Loader Class Initialized
+INFO - 2020-04-30 20:51:39 --> Helper loaded: url_helper
+INFO - 2020-04-30 20:51:39 --> Helper loaded: string_helper
+INFO - 2020-04-30 20:51:39 --> Helper loaded: date_helper
+INFO - 2020-04-30 20:51:40 --> Helper loaded: array_helper
+INFO - 2020-04-30 20:51:40 --> Helper loaded: security_helper
+INFO - 2020-04-30 20:51:40 --> Helper loaded: text_helper
+INFO - 2020-04-30 20:51:40 --> Helper loaded: session_helper
+INFO - 2020-04-30 20:51:40 --> Controller Class Initialized
+INFO - 2020-04-30 20:51:40 --> Database Driver Class Initialized
+INFO - 2020-04-30 20:51:40 --> Database Driver Class Initialized
+INFO - 2020-04-30 20:51:41 --> Model Class Initialized
+INFO - 2020-04-30 20:51:41 --> Model Class Initialized
+INFO - 2020-04-30 20:51:42 --> Final output sent to browser
+INFO - 2020-04-30 20:51:42 --> Total execution time: 3.1231

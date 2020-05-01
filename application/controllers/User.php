@@ -8,7 +8,7 @@ class User extends CI_Controller {
         // Your own constructor code
         $this->load->database();
         $this->default= $this->load->database('default', TRUE);
-            
+
             $this->load->model('log/Model_log');
             $this->load->model('user/Querys');
             $xr8_data = $this->Model_log->logNew();
@@ -16,19 +16,15 @@ class User extends CI_Controller {
     //--->
 
     //--->
-    public function index(){       
-
+    public function index(){
         $xr8_data = $this->Model_log->logNew();
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
-           
         }
     //--->
 
         //--->
         public function createdata(){
             $xr8_data = $this->Querys->logNew();
-                                
                 /*
                 'id_advance' => random_string('sha1', 20),
                 'time'       => date("Y-m-d H:m:s"),
@@ -41,26 +37,22 @@ class User extends CI_Controller {
                 'telefono'   => $_POST['tel'],
                 'puesto'     => $_POST['puesto']
                 */
-
-
                 if (
-                    empty($_POST['user'])        || 
-                    empty($_POST['permissions']) || 
-                    empty($_POST['email'])       || 
-                    empty($_POST['password'])    || 
-                    empty($_POST['first'])       || 
-                    empty($_POST['second'])      || 
-                    empty($_POST['tel'])         || 
-                    empty($_POST['puesto']) 
+                    empty($_POST['user'])        ||
+                    empty($_POST['permissions']) ||
+                    empty($_POST['email'])       ||
+                    empty($_POST['password'])    ||
+                    empty($_POST['first'])       ||
+                    empty($_POST['second'])      ||
+                    empty($_POST['tel'])         ||
+                    empty($_POST['puesto'])
                     ){
 
                         echo "algo post vacio";
-
                     }else{
 
                         $xr8_data   = $this->Querys->usuarioNew();
                         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
                     }
 
             }
@@ -70,9 +62,9 @@ class User extends CI_Controller {
         public function readerdata(){
             /* Rec Log*/
             $xr8_data = $this->Model_log->logNew();
-            
-            //$id_advance = 'CLjFxfEC16HE9AZ948Ws';    
-            //a181a603769c1f98ad927e7367c7aa51 = all    
+
+            //$id_advance = 'CLjFxfEC16HE9AZ948Ws';
+            //a181a603769c1f98ad927e7367c7aa51 = all
             //b326b5062b2f0e69046810717534cb09 = true
             //68934a3e9455fa72420237eb05902327 = false
 
@@ -95,8 +87,9 @@ class User extends CI_Controller {
         //--->
         public function update(){
 
-            
-            $xr8_data = $this->Querys->socios_actualizar();
+            $id_advance = $_POST['id_advance'];
+            $xr8_data = $this->Querys->socios_actualizar($id_advance);
+
             //----->json
             $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
 
@@ -105,7 +98,7 @@ class User extends CI_Controller {
 
         //--->
         public function delete(){
-            $xr8_data = $this->Querys->socios_nuevo();
+            $xr8_data = $this->Querys->socios_borrar();
             //----->json
             $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
             }
