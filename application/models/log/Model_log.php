@@ -12,21 +12,21 @@
 
         //--->
         function logNew(){
-            /*
-            SQL
-            INSERT INTO `log` (`id_advance`) VALUES ('134365578098ouikgtdf')
-            */
+          /*
+          $response = file_get_contents('http://worldtimeapi.org/api/timezone/America/Mexico_City');
 
-            $response = file_get_contents('http://worldtimeapi.org/api/timezone/America/Mexico_City');      
             $obj = json_decode($response);
 
-            $data['id_advance'] = random_string('alpha', 20);
-            $data['time']       = $obj->{'datetime'};
-            
+              $data['time']       = $obj->{'datetime'};
+              */
+              $data['time']       = date('Y-m-d H:m:s');
+              $data['id_advance'] = random_string('alpha', 20);
+
                 $this->db->insert('log', $data);
 
-                    $status = "[OK: new record log]";
-                    return    $status;
+                //$status['message'] = "worldtimeapi";
+                $status['message'] = "date php";
+                  return    $status;
               }
         //--->
 

@@ -85,7 +85,7 @@ class User extends CI_Controller {
         //--->
 
         //--->
-        public function update(){
+        public function updatedata(){
 
             $id_advance = $_POST['id_advance'];
             $xr8_data = $this->Querys->socios_actualizar($id_advance);
@@ -97,7 +97,7 @@ class User extends CI_Controller {
         //--->
 
         //--->
-        public function delete(){
+        public function deletedata(){
             $xr8_data = $this->Querys->socios_borrar();
             //----->json
             $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
