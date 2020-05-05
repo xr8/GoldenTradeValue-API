@@ -19,7 +19,9 @@ class User extends CI_Controller {
         $configEmail = Array(
             'useragent' => 'Tech LUXZA SYSTEMS',
             'protocol'  => 'smtp',
+            'smtp_crypto' => 'tls',
             'smtp_host' => 'mail.lonex.com',
+            'smtp_timeout' => 20,
             'smtp_port' =>  2525,
             'smtp_user' => 'confirmacion@pideboletos.com',
             'smtp_pass' => '12345aeiou',
