@@ -16,7 +16,7 @@ class User extends CI_Controller {
             'mailtype'  => 'html',
             'charset'   => 'utf-8'
             );
-            $this->load->library('email', $configEmail);
+        $this->load->library('email', $configEmail);
 
         // Your own constructor code
         $this->load->database();
@@ -129,7 +129,7 @@ class User extends CI_Controller {
           $this->email->subject('GTV Recuperacion');
 
               $body = $this->load->view('user/lostpassword', $data, TRUE);
-              $this->email->message($body);
+              $this->email->message("demo EMAIL");
 
               try{
 
