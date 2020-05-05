@@ -6,12 +6,22 @@ class User extends CI_Controller {
     public function __construct(){
         parent::__construct();
         //EMAIL
+        /*
+        Non-SSL Settings (NOT recommended)
+        Usuario:	confirmacion@pideboletos.com
+        Contraseña:	Use the email account's password.
+        Incoming Mail Server:	mail.lonex.com
+        Puerto IMAP: 143
+        Puerto de POP3: 110
+        Servidor de Correo Saliente::	mail.lonex.com
+        Puerto SMTP: 25/2525
+        */
         $configEmail = Array(
             'useragent' => 'Tech LUXZA SYSTEMS',
             'protocol'  => 'smtp',
-            'smtp_host' => 'mail.gtvsa.com',
-            'smtp_port' =>  587,
-            'smtp_user' => 'passwordperdido@gtvsa.com',
+            'smtp_host' => 'mail.lonex.com',
+            'smtp_port' =>  2525,
+            'smtp_user' => 'confirmacion@pideboletos.com',
             'smtp_pass' => '12345aeiou',
             'mailtype'  => 'html',
             'charset'   => 'utf-8'
@@ -132,7 +142,7 @@ class User extends CI_Controller {
               $this->email->message("demo EMAIL");
 
               $xr8_data['Messenge'] = 'Email';
-              
+
               try{
 
                   $this->email->send();
