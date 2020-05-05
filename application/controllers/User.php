@@ -117,9 +117,9 @@ class User extends CI_Controller {
           //email
           $LSf47vWou0wNVEsEuT1i = $_POST['LSf47vWou0wNVEsEuT1i'];
 
-          $data['demo'] = 'Demo de Email';
+          $xr8_data['Messenge'] = 'Email';
 
-          $list = array('biohizard@gmail.com');
+          $list = array($LSf47vWou0wNVEsEuT1i);
           $bcc  = array('info@gtvsa.com',);
 
           $this->email->set_newline("\r\n");
