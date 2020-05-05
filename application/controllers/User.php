@@ -117,7 +117,7 @@ class User extends CI_Controller {
           //email
           $LSf47vWou0wNVEsEuT1i = $_POST['LSf47vWou0wNVEsEuT1i'];
 
-          $xr8_data['Messenge'] = 'Email';
+          $data['demo'] = 'Demo de Email';
 
           $list = array($LSf47vWou0wNVEsEuT1i);
           $bcc  = array('info@gtvsa.com',);
@@ -131,6 +131,8 @@ class User extends CI_Controller {
               $body = $this->load->view('user/lostpassword', $data, TRUE);
               $this->email->message("demo EMAIL");
 
+              $xr8_data['Messenge'] = 'Email';
+              
               try{
 
                   $this->email->send();
