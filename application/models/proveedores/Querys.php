@@ -1,105 +1,201 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-    /**
+/**
     *Create
     *Read
     *Update
     *Delete
     **/
 
-    class Querys extends CI_Model {
+class Querys extends CI_Model
+{
 
-      //--->
-      function proveedoresCreate(){
-          $data = array(
-              'id_advance' => random_string('sha1', 20),
-              'time'       => date("Y-m-d H:m:s"),
-              'activo'     => "true",
-              'email'      => $_POST['email'],
-              'firstname'  => $_POST['first'],
-              'secondname' => $_POST['second'],
-              'telefono'   => $_POST['tel']
-          );
-          $this->db->insert('proveedores', $data);
-            //return $status;
-            $status = "[OK: 1]";
-            return    $status;
-          }
-      //--->
-      //--->
+  //--->
+  function proveedoresCreate()
+  {
+    $random = random_string('sha1', 20);
+    $date   = date("Y-m-d H:m:s");
+    $r_id   = random_string('md5', 4);
 
-        //--->
-        function proveedoresRead($id_advance,$all){
+    $data0 = array(
+      'id_advance'        => random_string('sha1', 20),
+      'time'              => $date,
+      'id_advance_origen' => $random,
+      'rfc'              => $_POST['rfc1'],
+      'pais'             => $_POST['pais1'],
+      'giro'             => $_POST['giro1'],
+    );
 
-            //---A)
-            $this->db->select('
+    $data1 = array(
+      'id_advance' => $random,
+      'time'       => $date,
+      'activo'     => "true",
+      'firstname'  => $_POST['first'],
+      'secondname' => $_POST['second'],
+      'email'      => $_POST['email'],
+      'telefono'   => $_POST['tel'],
+      'rfc'        => $_POST['rfc'],
+      'curp'       => $_POST['curp'],
+      'direccion'  => $_POST['direccion']
+
+    );    
+    $this->db->insert('razonsocial', $data0);
+    $this->db->insert('proveedores'   , $data1);
+
+    //return $status;
+    $status = [
+      "category"    => "Request",
+      "description" => "Create Cliente New",
+      "id advance"  => $random,
+      "date"        => $date,
+      "http_code"   => 404,
+      "code"        => 1001,
+      "request"     => true,
+      "request_id"  => $r_id
+    ];
+
+    return    $status;
+  }
+  //--->
+
+  //--->
+  function proveedoresRead($id_advance, $all)
+  {
+
+    //---A)
+
+    $this->db->select('
             `proveedores`.id_advance,
             `proveedores`.time,
             `proveedores`.email,
             `proveedores`.firstname,
             `proveedores`.secondname,
             `proveedores`.telefono,
-                ');
-            $this->db->from('proveedores');
+            `proveedores`.rfc,
+            `proveedores`.curp,
+            `proveedores`.direccion,
+            `razonsocial`.id_advance_origen AS rs_id_advance,
+            `razonsocial`.fechaconsti       AS rs_fechaconsti,
+            `razonsocial`.rfc               AS rs_rfc,
+            `razonsocial`.pais              AS rs_pais,
+            `razonsocial`.giro              AS rs_giro
+            ');
 
-            /*all o single*/
-            if ($all == true) {
+    $this->db->from('proveedores');
+    
+    $this->db->join('razonsocial', 'razonsocial.id_advance_origen = proveedores.id_advance');
 
-                $this->db->where('proveedores.`activo`','true');
+    /*all o single*/
+    if ($all == true) {
 
-                }else{
+      $this->db->where('proveedores.`activo`', 'true');
+    } else {
 
-                    $this->db->where('proveedores.`id_advance`',$id_advance);
-                    $this->db->where('proveedores.`activo`','true');
+      $this->db->where('proveedores.`id_advance`', $id_advance);
+      $this->db->where('proveedores.`activo`', 'true');
+    }
 
-                    }
+    $query = $this->db->get();
+    $row = $query->row_array();
+    //---A)
 
-                $query = $this->db->get();
-                $row = $query->row_array();
-            //---A)
+    if ($query->num_rows() > 0) {
+      foreach ($query->result() as $row) {
+        $row->Message = "Datasuccessful";
+        $data[] = $row;
+      }
+      return $data;
+    }
+  }
+  //--->
 
-                if ($query->num_rows() > 0) {
-                    foreach ($query->result() as $row) {
-                        $row->Message = "Datasuccessful";
-                        $data[] = $row;
-                        }
-                        return $data;
-                    }
+  //--->
+  function proveedoresUpdate()
+  {
+    $random = random_string('sha1', 20);
+    $date   = date("Y-m-d H:m:s");
+    $r_id   = random_string('md5', 4);
 
-        }
-        //--->
+            /*
+        Array ( 
+            [id_advance] => 0f9385c23d1d5825d266 
 
-        //--->
-        function proveedoresUpdate(){
+            [rfc1] => 3 
+            [pais1] => 3 
+            [giro1] => 3 
 
-          $data = array(
-            'email'      => $_POST['email'],
-            'firstname'  => $_POST['first'],
-            'secondname' => $_POST['second'],
-            'telefono'   => $_POST['tel'],
-              );
+            [first] => viernes3 
+            [second] => gomez3 
+            [email] => viernes@gomez.com3 
+            [tel] => 55111122223 
+            [rfc] => SAOK790530QZ23 
+            [curp] => BEML920313HMCLNS093 
+            [direccion] => Av. Paseo de la Reforma No 347, Cuauhtémoc, CP 06500 Ciudad de México, CDMX3 )        
 
-                    $this->db->where('id_advance',$_POST['id_advance']);
-                    $this->db->update('proveedores', $data);
+        */
+    $data0 = array(
+      'firstname'  => $_POST['first'],
+      'secondname' => $_POST['second'],
+      'email'      => $_POST['email'],
+      'telefono'   => $_POST['tel'],
+      'rfc'        => $_POST['rfc'],
+      'curp'       => $_POST['curp'],
+      'direccion'  => $_POST['direccion']      
+    );
 
-                      //return $status;
-                      $status = "[OK: 1]";
-                      return    $status;
-          }
-          //--->
+    $this->db->where('id_advance', $_POST['id_advance']);
+    $this->db->update('proveedores', $data0);
 
-        function proveedoresDelete(){
+    $data1 = array(
+      'rfc'        => $_POST['rfc1'],
+      'pais'       => $_POST['pais1'],
+      'giro'       => $_POST['giro1']      
+    );
+    $this->db->where('id_advance_origen', $_POST['id_advance']);
+    $this->db->update('razonsocial', $data1);
 
-              $data = array('activo'=> 'false');
 
-                $this->db->where('id_advance',$_POST['id_advance']);
-                $this->db->update('proveedores', $data);
+    //return $status;
+    $status = [
+      "category"    => "Request",
+      "description" => "Update Cliente New",
+      "id advance"  => $random,
+      "date"        => $date,
+      "http_code"   => 404,
+      "code"        => 1001,
+      "request"     => true,
+      "request_id"  => $r_id
+    ];
 
-                    //return $status;
-                    $status = "[OK: 1]";
-                    return    $status;
-            }
-        //--->
+    return    $status;
+  }
+  //--->
 
-        }
+  function proveedoresDelete()
+  {
+    $random = random_string('sha1', 20);
+    $date   = date("Y-m-d H:m:s");
+    $r_id   = random_string('md5', 4);
+
+    $data = array('activo' => 'false');
+
+    $this->db->where('id_advance', $_POST['id_advance']);
+    $this->db->update('proveedores', $data);
+
+    //return $status;
+    $status = [
+      "category"    => "Request",
+      "description" => "Delete Cliente New",
+      "id advance"  => $random,
+      "date"        => $date,
+      "http_code"   => 404,
+      "code"        => 1001,
+      "request"     => true,
+      "request_id"  => $r_id
+    ];
+    return    $status;
+  }
+  //--->
+
+}
 /* End of file database.php */
