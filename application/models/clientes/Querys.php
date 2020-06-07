@@ -21,9 +21,10 @@ class Querys extends CI_Model
       'id_advance'        => random_string('sha1', 20),
       'time'              => $date,
       'id_advance_origen' => $random,
-      'rfc'              => $_POST['rfc1'],
-      'pais'             => $_POST['pais1'],
-      'giro'             => $_POST['giro1'],
+      'fechaconsti'       => $_POST['fecha1'],
+      'rfc'               => $_POST['rfc1'],
+      'pais'              => $_POST['pais1'],
+      'giro'              => $_POST['giro1'],
     );
 
     $data1 = array(
@@ -63,7 +64,6 @@ class Querys extends CI_Model
   {
 
     //---A)
-
     $this->db->select('
             `clientes`.id_advance,
             `clientes`.time,
@@ -75,22 +75,19 @@ class Querys extends CI_Model
             `clientes`.curp,
             `clientes`.direccion,
             `razonsocial`.id_advance_origen AS rs_id_advance,
-            `razonsocial`.fechaconsti       AS rs_fechaconsti,
+            `razonsocial`.fechaconsti       AS rs_fecha,
             `razonsocial`.rfc               AS rs_rfc,
             `razonsocial`.pais              AS rs_pais,
             `razonsocial`.giro              AS rs_giro
             ');
-
     $this->db->from('clientes');
     
     $this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
 
     /*all o single*/
-    if ($all == true) {
-
+    if($all == true){
       $this->db->where('clientes.`activo`', 'true');
-    } else {
-
+    }elseif($all == false){
       $this->db->where('clientes.`id_advance`', $id_advance);
       $this->db->where('clientes.`activo`', 'true');
     }
@@ -101,6 +98,10 @@ class Querys extends CI_Model
 
     if ($query->num_rows() > 0) {
       foreach ($query->result() as $row) {
+        //04/06/2020'
+        //'2020-05-30
+        
+        $row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
         $row->Message = "Datasuccessful";
         $data[] = $row;
       }
@@ -147,13 +148,13 @@ class Querys extends CI_Model
     $this->db->update('clientes', $data0);
 
     $data1 = array(
-      'rfc'        => $_POST['rfc1'],
-      'pais'       => $_POST['pais1'],
-      'giro'       => $_POST['giro1']      
+      'rfc'         => $_POST['rfc1'],
+      'pais'        => $_POST['pais1'],
+      'giro'        => $_POST['giro1'],      
+      'fechaconsti' => $_POST['fecha1']
     );
     $this->db->where('id_advance_origen', $_POST['id_advance']);
     $this->db->update('razonsocial', $data1);
-
 
     //return $status;
     $status = [
