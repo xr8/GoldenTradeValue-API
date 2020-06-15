@@ -28,30 +28,40 @@ class Clientes extends CI_Controller
     //--->
     public function createdata()
     {
-
+    /*
+    Array
+    (
+        [fecha1] => 2020-06-01
+        [rfc1] => 1
+        [pais1] => 2
+        [giro1] => 3
+        [first] => 4
+        [second] => 5
+        [email] => 6
+        [tel] => 7
+        [rfc] => 8
+        [curp] => 9
+        [direccion] => 0
+    )
+    */
         if (
-            empty($_POST['fecha1']) ||
-            empty($_POST['rfc1'])   ||
-            empty($_POST['pais1'])  ||
-            empty($_POST['giro1'])  ||
-            empty($_POST['first'])  ||
-            empty($_POST['second']) ||
-            empty($_POST['email'])  ||
-            empty($_POST['tel'])    ||
-            empty($_POST['rfc'])    ||
-            empty($_POST['curp'])   ||
-            empty($_POST['direccion'])
+            is_null($_POST['fecha1'])   or
+            is_null($_POST['rfc1'])     or
+            is_null($_POST['pais1'])    or
+            is_null($_POST['giro1'])    or
+            is_null($_POST['first'])    or
+            is_null($_POST['second'])   or
+            is_null($_POST['email'])    or
+            is_null($_POST['tel'])      or
+            is_null($_POST['rfc'])      or
+            is_null($_POST['curp'])     or
+            is_null($_POST['direccion'])
         ) {
-
-            echo "algo post vacio";
-
+            $xr8_data   = "Error: 1001";
         } else {
-
             $xr8_data   = $this->Querys->clientesCreate();
-            $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
         }
-        
+        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
 

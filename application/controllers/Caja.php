@@ -1,5 +1,5 @@
 <?php
-class Proveedores extends CI_Controller
+class Caja extends CI_Controller
 {
     //----->
 
@@ -12,7 +12,7 @@ class Proveedores extends CI_Controller
         $this->default = $this->load->database('default', TRUE);
 
         $this->load->model('log/Model_log');
-        $this->load->model('proveedores/Querys');
+        $this->load->model('caja/Querys');
         $xr8_data = $this->Model_log->logNew();
     }
     //--->
@@ -28,24 +28,22 @@ class Proveedores extends CI_Controller
     //--->
     public function createdata()
     {
-        print_r($_POST);
         if (
-            is_null($_POST['fecha1']) ||
-            is_null($_POST['rfc1'])   ||
-            is_null($_POST['pais1'])  ||
-            is_null($_POST['giro1'])  ||
-            is_null($_POST['first'])  ||
-            is_null($_POST['second']) ||
-            is_null($_POST['email'])  ||
-            is_null($_POST['tel'])    ||
-            is_null($_POST['rfc'])    ||
-            is_null($_POST['curp'])   ||
-            is_null($_POST['direccion'])
+            is_null($_POST['fecha'])             or
+            is_null($_POST['origen_id_advance']) or
+            is_null($_POST['entrada'])           or
+            is_null($_POST['salida'])            or
+            is_null($_POST['nocompra'])          or
+            is_null($_POST['concepto'])          or
+            is_null($_POST['totalbilletes'])     or
+            is_null($_POST['notas'])             or
+            is_null($_POST['tipo'])             
         ) {
             $xr8_data   = "Error: 1001";
         } else {
-            $xr8_data   = $this->Querys->proveedoresCreate();
+            $xr8_data   = $this->Querys->cajaCreate();
         }
+
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
@@ -63,21 +61,24 @@ class Proveedores extends CI_Controller
             a18a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
         */
         
-        if(empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09'){
+        if (empty($_GET['id_advance'])){
+            $date = date("Y-m");
+        }else{
+            $date = $_GET['id_advance'];
+        }
+
+        if (empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09') {
 
             /*
             all
             id_advance                       =
             a181a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
             */
-            $xr8_data   = array('all' => "all");
             $id_advance = null;
             $all        = true;
-            $xr8_data   = $this->Querys->proveedoresRead($id_advance, $all);
+            $xr8_data   = $this->Querys->cajaRead($id_advance, $all, $date);
+        } else if (!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327') {
 
-
-        }else if(!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327'){
-            
             /*
             one
             id_advance                       = ec66331706175538efd5
@@ -86,38 +87,62 @@ class Proveedores extends CI_Controller
 
             $id_advance = $_GET['id_advance'];
             $all        = false;
-            $xr8_data   = $this->Querys->proveedoresRead($id_advance, $all);
+            $xr8_data   = $this->Querys->cajaRead($id_advance, $all, $date);
+        } else {
+            $xr8_data  = array("Error"  => 101);
+        }
 
-        }else{ $xr8_data  = array("Error"  => 101); }
 
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
     }
     //--->
 
     //--->
     public function updatedata()
     {
-        
+
         //print_r($_POST);
 
         $id_advance = $_POST['id_advance'];
-        $xr8_data = $this->Querys->proveedoresUpdate($id_advance);
+        $xr8_data = $this->Querys->clientesUpdate($id_advance);
 
         //----->json
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-        
     }
     //--->
 
     //--->
     public function deletedata()
     {
-        $xr8_data = $this->Querys->proveedoresDelete();
+        $xr8_data = $this->Querys->clientesDelete();
         //----->json
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
+
+    //--->
+    public function utilitydata()
+    {
+
+        if (!empty($_GET['type'])) {
+
+            if ($_GET['type'] == 'total') {
+                $xr8_data = $this->Querys->utilityTotal();
+            }else if ($_GET['type'] == 'buscar') {
+                $xr8_data = $this->Querys->utilityBuscar();
+            } else {
+                $xr8_data  = array("Error"  => 103);
+            }
+
+        } else {
+
+            $xr8_data  = array("Error"  => 102);
+
+        }
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+    }
+    //--->    
 
     //----->
 }
