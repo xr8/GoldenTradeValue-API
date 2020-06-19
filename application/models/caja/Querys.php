@@ -54,7 +54,7 @@ class Querys extends CI_Model
     //--->
     function cajaRead($id_advance, $all, $date)
     {
-        
+        //print $date;
         //---A)
         /*
         {
@@ -88,15 +88,15 @@ class Querys extends CI_Model
         `CajaEntradaSalida`.tipo,
         ');
         $this->db->from('CajaEntradaSalida');
-        $this->db->like('fecha',$date);
+        $this->db->like('fecha',$_GET['date']);
 
         /*all o single*/
         if ($all == true) {
         } elseif ($all == false) {
-            $this->db->where('caja.`id_advance`', $id_advance);
+            //$this->db->where('caja.`id_advance`', $id_advance);
         }
-
         $this->db->order_by("id", "ASC");
+        $this->db->order_by("fecha", "ASC");
 
         $query = $this->db->get();
         $row = $query->row_array();
