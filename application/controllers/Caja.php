@@ -130,7 +130,10 @@ class Caja extends CI_Controller
                 $xr8_data = $this->Querys->utilityTotal();
             }else if ($_GET['type'] == 'buscar') {
                 $xr8_data = $this->Querys->utilityBuscar();
-            } else {
+            }else if ($_GET['type'] == 'ultimafecha') {
+                $xr8_data = $this->Querys->utilityUltimafecha();
+            } 
+             else {
                 $xr8_data  = array("Error"  => 103);
             }
 

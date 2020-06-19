@@ -253,6 +253,38 @@ class Querys extends CI_Model
         return $data;
     }
     //--->
+    
+    //--->
+    function utilityUltimafecha()
+    {
 
+
+        $this->db->select('
+        `CajaEntradaSalida`.id,
+        `CajaEntradaSalida`.id_advance,
+        `CajaEntradaSalida`.time,
+        `CajaEntradaSalida`.fecha,
+        ');
+        $this->db->from('CajaEntradaSalida');
+        $this->db->order_by("id", "DESC");
+        $this->db->limit(1); 
+
+        $query = $this->db->get();
+        $row = $query->row_array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+        } else {
+            $data[] = null;
+        }
+
+        return $data;
+        
+        
+    }
+    //--->    
+    
 }
 /* End of file database.php */
