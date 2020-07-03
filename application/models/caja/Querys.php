@@ -230,11 +230,8 @@ class Querys extends CI_Model
     function utilityBuscar()
     {
 
-        $this->db->select('
-        `clientes`.id_advance,
-        `clientes`.firstname,
-        `clientes`.secondname,
-        ');
+        //----> clientes
+        $this->db->select('`clientes`.id_advance,`clientes`.firstname,`clientes`.secondname');
         $this->db->from('clientes');
         $this->db->like('firstname', $_GET['term']);
 
@@ -243,12 +240,31 @@ class Querys extends CI_Model
 
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $row->nombre = "Datasuccessful";
+                $row->nombrecompuesto = $row->firstname . " " . $row->secondname;
                 $data[] = $row;
             }
         } else {
-            $data[] = null;
+
+            //----> proveedores
+            $this->db->select('`proveedores`.id_advance,`proveedores`.firstname,`proveedores`.secondname');
+            $this->db->from('proveedores');
+            $this->db->like('firstname', $_GET['term']);
+    
+            $query = $this->db->get();
+            $row = $query->row_array();
+    
+            if ($query->num_rows() > 0) {
+                foreach ($query->result() as $row) {
+                    $row->nombrecompuesto = $row->firstname . " " . $row->secondname;
+                    $data[] = $row;
+                }
+            }
+            //----> proveedores
+
+            //$data[] = null;
         }
+        //----> clientes
+
 
         return $data;
     }
