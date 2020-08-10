@@ -28,20 +28,49 @@ class Caja extends CI_Controller
     //--->
     public function createdata()
     {
+        /*
+        cajaIdAdvance: U-03fb5ca7539c770b6b
+        cajaNuevoFecha: 2020-07-01
+        cajaResult: C-zr8h0iji96crde4
+        cajaConcepto: concepto 1
+        cajaNotas: nota 1
+        cajaTipo: inicial
+        cajaMonto: 1000
+        cajaNoCompra: 000
+        cajaTotalMBData: 0|0|0|0|0|0|0|0|0|0|1
+        */
         if (
-            is_null($_POST['fecha'])             or
-            is_null($_POST['origen_id_advance']) or
-            is_null($_POST['entrada'])           or
-            is_null($_POST['salida'])            or
-            is_null($_POST['nocompra'])          or
-            is_null($_POST['concepto'])          or
-            is_null($_POST['totalbilletes'])     or
-            is_null($_POST['notas'])             or
-            is_null($_POST['tipo'])             
+            is_null($_POST['cajaIdAdvance'])  or
+            is_null($_POST['cajaNuevaFecha']) or
+            is_null($_POST['cajaResult'])     or
+            is_null($_POST['cajaConcepto'])   or
+            is_null($_POST['cajaNotas'])      or
+            is_null($_POST['cajaTipo'])       or
+            is_null($_POST['cajaMonto'])      or
+            is_null($_POST['cajaNoCompra'])   or
+            is_null($_POST['cajaTotalMBData'])
         ) {
+        //----->
             $xr8_data   = "Error: 1001";
+        //----->
         } else {
-            $xr8_data   = $this->Querys->cajaCreate();
+        //----->
+            if($_POST['cajaSave'] == 'true'){
+            //----->
+                $xr8_data   = $this->Querys->cajaCreate();
+            //----->
+            }else{
+            //----->
+                $xr8_data  = [
+                    "category"    => "Demo",
+                    "http_code"   => 404,
+                    "code"        => 1005,
+                    "request"     => true
+                ];
+            //----->
+            }
+
+        //----->    
         }
 
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
@@ -49,6 +78,12 @@ class Caja extends CI_Controller
     //--->
 
     //--->
+    /*
+    /caja/readerdata?
+    id_advance=&
+    a181a603769c1f98ad927e7367c7aa51=b326b5062b2f0e69046810717534cb09&
+    date=2020-07
+    */
     public function readerdata()
     {
         //$xr8_data                        = $this->Model_log->logNew();
@@ -126,26 +161,85 @@ class Caja extends CI_Controller
 
         if (!empty($_GET['type'])) {
 
-            if ($_GET['type'] == 'total') {
-                $xr8_data = $this->Querys->utilityTotal();
-            }else if ($_GET['type'] == 'buscar') {
+            if($_GET['type'] == 'total') {
 
-                $xr8_data = $this->Querys->utilityBuscar();
+                $xr8_data = $this->Querys->utilityTotal();
+
+            }else if ($_GET['type'] == 'buscar') {
+                //-----> Begin: Buscar
                 
+                //--->
+                /*
+                A) Model buscar user si existe alguna coicidencia imprime un json
+                B)si no existe ninguna coicidencia ejecuta Model buscar clientes
+                C) Model buscar clientes si existe alguna coicidencia imprime un json
+                D) si no existe ninguna coicidencia Model buscar proveedor
+                E)si no existe ninguna coicidencia ejecuta Model buscar clientes
+                f) si no existe ninguna coicidencia IMPRIME error 104
+
+                */
+                $dataUser = $this->Querys->utilityBuscarUser();
+                
+                    if(!array_key_exists("Error",$dataUser[0])){
+                        
+                        //A)
+                        $this->output->set_content_type('application/json')->set_output(json_encode($dataUser));
+
+                    }else if(array_key_exists("Error",$dataUser[0]) && $dataUser[0]['Error'] == 101){
+                        
+                        //B)
+                        $dataClientes = $this->Querys->utilityBuscarClientes();
+
+                        if(!array_key_exists("Error",$dataClientes[0])){
+
+                            //C)
+                            $this->output->set_content_type('application/json')->set_output(json_encode($dataClientes));
+
+                        }else if(array_key_exists("Error",$dataClientes[0]) && $dataClientes[0]['Error'] == 101){
+                            
+                            //D)
+                            $dataProveedor = $this->Querys->utilityBuscarProveedor();
+
+                            if(!array_key_exists("Error",$dataProveedor[0])){
+                                
+                                //E)
+                                $this->output->set_content_type('application/json')->set_output(json_encode($dataProveedor));
+
+                            }else if(array_key_exists("Error",$dataProveedor[0]) && $dataProveedor[0]['Error'] == 101){
+                                
+                                //F)
+                                $dataError = array("Error" => 104,"Buscador" =>"Error");
+                                $this->output->set_content_type('application/json')->set_output(json_encode($dataError));
+
+                            }
+
+                        }
+
+                    }
+                
+                //--->
+
+
+
+                //-----> End: Buscar
             }else if ($_GET['type'] == 'ultimafecha') {
+
                 $xr8_data = $this->Querys->utilityUltimafecha();
-            } 
-             else {
+                $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+
+            }else{
+
                 $xr8_data  = array("Error"  => 103);
+                $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+                
             }
 
         } else {
-
             $xr8_data  = array("Error"  => 102);
-
+            $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
         }
 
-        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+        
     }
     //--->    
 
