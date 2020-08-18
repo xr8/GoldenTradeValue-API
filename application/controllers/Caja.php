@@ -42,13 +42,10 @@ class Caja extends CI_Controller
         if (
             is_null($_POST['cajaIdAdvance'])  or
             is_null($_POST['cajaNuevaFecha']) or
-            is_null($_POST['cajaResult'])     or
             is_null($_POST['cajaConcepto'])   or
             is_null($_POST['cajaNotas'])      or
             is_null($_POST['cajaTipo'])       or
-            is_null($_POST['cajaMonto'])      or
-            is_null($_POST['cajaNoCompra'])   or
-            is_null($_POST['cajaTotalMBData'])
+            is_null($_POST['cajaMonto'])      
         ) {
         //----->
             $xr8_data   = "Error: 1001";
@@ -57,7 +54,19 @@ class Caja extends CI_Controller
         //----->
             if($_POST['cajaSave'] == 'true'){
             //----->
-                $xr8_data   = $this->Querys->cajaCreate();
+            $idoperacion  = $this->Querys->idOperacion();
+            
+            //print_r($idoperacion);
+                
+                if($idoperacion['code'] == 1001){
+                   $xr8_data   = $this->Querys->cajaCreate();
+                   $xr8_data  = ["code_operacion" => $idoperacion['code'] ,  "time" => Date("Y-m-d H:m:s") , "category"    => "does not exist","http_code"   => 200,"code"        => 1001,"request"     => true];
+                }else{
+                    $xr8_data  = ["code_operacion" => $idoperacion['code'] ,  "time" => Date("Y-m-d H:m:s") , "category"    => "if it exists" ,"http_code"   => 200,"code"        => 2001,"request"     => false];
+                }
+            
+                
+                
             //----->
             }else{
             //----->
@@ -73,7 +82,8 @@ class Caja extends CI_Controller
         //----->    
         }
 
-        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+       $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+
     }
     //--->
 
@@ -149,7 +159,7 @@ class Caja extends CI_Controller
     //--->
     public function deletedata()
     {
-        $xr8_data = $this->Querys->clientesDelete();
+        $xr8_data = $this->Querys->cajaDelete();
         //----->json
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
@@ -227,6 +237,42 @@ class Caja extends CI_Controller
                 $xr8_data = $this->Querys->utilityUltimafecha();
                 $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
 
+            }else if ($_GET['type'] == 'cancelados') {
+                //-------------------->
+                if (empty($_GET['id_advance'])){
+                    $date = date("Y-m");
+                }else{
+                    $date = $_GET['id_advance'];
+                }
+        
+                if (empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09') {
+        
+                    /*
+                    all
+                    id_advance                       =
+                    a181a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
+                    */
+                    $id_advance = null;
+                    $all        = true;
+                    $xr8_data   = $this->Querys->utilityCancelados($id_advance, $all, $date);
+                } else if (!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327') {
+        
+                    /*
+                    one
+                    id_advance                       = ec66331706175538efd5
+                    a181a603769c1f98ad927e7367c7aa51 = 68934a3e9455fa72420237eb05902327
+                    */
+        
+                    $id_advance = $_GET['id_advance'];
+                    $all        = false;
+                    $xr8_data   = $this->Querys->utilityCancelados($id_advance, $all, $date);
+                } else {
+                    $xr8_data  = array("Error"  => 101);
+                }
+        
+        
+                $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+                //-------------------->
             }else{
 
                 $xr8_data  = array("Error"  => 103);

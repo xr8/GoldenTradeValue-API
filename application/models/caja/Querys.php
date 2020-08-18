@@ -22,18 +22,17 @@ class Querys extends CI_Model
             $data0 = array(
                 'id_advance'        => random_string('sha1', 20),
                 'time'              => $date,
+                'idoperacion'       => $_POST['idOperacion'],
                 'cajaIdAdvance'     => $_POST['cajaIdAdvance'],
-                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaResult'        => $_POST['cajaResult'],
+                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaConcepto'      => $_POST['cajaConcepto'],
                 'cajaNotas'         => $_POST['cajaNotas'],
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => '0',
                 'cajaSaldo'         => $_POST['cajaMonto'],
-                'cajaMonto'         => $_POST['cajaMonto'],
-                'cajaNoCompra'      => $_POST['cajaNoCompra'],
-                'cajaTotalMBData'   => $_POST['cajaTotalMBData']
+                'cajaMonto'         => $_POST['cajaMonto']
             );
 
         }else if($_POST['cajaTipo'] == 'entrada'){
@@ -41,18 +40,17 @@ class Querys extends CI_Model
             $data0 = array(
                 'id_advance'        => random_string('sha1', 20),
                 'time'              => $date,
+                'idoperacion'       => $_POST['idOperacion'],
                 'cajaIdAdvance'     => $_POST['cajaIdAdvance'],
-                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaResult'        => $_POST['cajaResult'],
+                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaConcepto'      => $_POST['cajaConcepto'],
                 'cajaNotas'         => $_POST['cajaNotas'],
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => $_POST['cajaMonto'],
                 'cajaSalida'        => '0',
                 'cajaSaldo'         => '0',
-                'cajaMonto'         => $_POST['cajaMonto'],
-                'cajaNoCompra'      => $_POST['cajaNoCompra'],
-                'cajaTotalMBData'   => $_POST['cajaTotalMBData']
+                'cajaMonto'         => $_POST['cajaMonto']
             );
 
         }else if($_POST['cajaTipo'] == 'salida'){
@@ -60,22 +58,20 @@ class Querys extends CI_Model
             $data0 = array(
                 'id_advance'        => random_string('sha1', 20),
                 'time'              => $date,
+                'idoperacion'       => $_POST['idOperacion'],
                 'cajaIdAdvance'     => $_POST['cajaIdAdvance'],
-                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaResult'        => $_POST['cajaResult'],
+                'cajaNuevaFecha'    => $_POST['cajaNuevaFecha'],
                 'cajaConcepto'      => $_POST['cajaConcepto'],
                 'cajaNotas'         => $_POST['cajaNotas'],
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => $_POST['cajaMonto'],
                 'cajaSaldo'         => '0',
-                'cajaMonto'         => $_POST['cajaMonto'],
-                'cajaNoCompra'      => $_POST['cajaNoCompra'],
-                'cajaTotalMBData'   => $_POST['cajaTotalMBData']
+                'cajaMonto'         => $_POST['cajaMonto']
             );
 
-        }else{
-        }
+        }else{}
 
         $this->db->insert('CajaEntradaSalida', $data0);
 
@@ -99,28 +95,11 @@ class Querys extends CI_Model
     //--->
     function cajaRead($id_advance, $all, $date)
     {
-        //print $date;
-        //---A)
-        /*
-        {
-        "id": "1",
-        "id_advance": "acc679a1caa70a1e8dda",
-        "time": "2020-06-08 12:00:00",
-        "fecha": "2020-01-08",
-        "origen_id_advance": "rwzr8h0iji96crde4",
-        "saldo": "777971.01",
-        "entrada": "0.00",
-        "salida": "0.00",
-        "nocompra": "0",
-        "concepto": "CORTE AL DIA\n",
-        "totalbilletes": "0",
-        "notas": "0",
-        "rs_fecha": "2020-01-08",
-        "Message": "Datasuccessful"
-        }
-        */
+        
+ 
         $this->db->select('
-            `CajaEntradaSalida`.id_advance,    
+            `CajaEntradaSalida`.id,    
+            `CajaEntradaSalida`.id_advance, 
             `CajaEntradaSalida`.cajaIdAdvance,
             `CajaEntradaSalida`.cajaNuevaFecha,
             `CajaEntradaSalida`.cajaResult,
@@ -131,16 +110,16 @@ class Querys extends CI_Model
             `CajaEntradaSalida`.cajaSalida,
             `CajaEntradaSalida`.cajaSaldo,
             `CajaEntradaSalida`.cajaNoCompra,
-            `CajaEntradaSalida`.cajaTotalMBData,
-            `user`.user,
-            `user`.email,
-            `user`.firstname,
-            `user`.secondname
+            `CajaEntradaSalida`.cajaTotalMBData
         ');
+        
         $this->db->from('CajaEntradaSalida');
-        $this->db->join('user', 'CajaEntradaSalida.cajaIdAdvance = user.id_advance');
+        $this->db->where_not_in('`CajaEntradaSalida`.cajaTipo','cancelado');                   
+        //$this->db->select('`user`.user');
+        //$this->db->join('user', 'CajaEntradaSalida.cajaResult = user.id_advance');
+        
         $this->db->like('cajaNuevaFecha',$_GET['date']);
-        $this->db->group_by('CajaEntradaSalida.time'); 
+        //$this->db->group_by('CajaEntradaSalida.time'); 
 
         /*all o single*/
         if ($all == true) {
@@ -155,14 +134,62 @@ class Querys extends CI_Model
 
         //---A)
         if ($query->num_rows() > 0) {
+        
             foreach ($query->result() as $row) {
+               
+                $xxx = explode('-',$row->cajaResult);
+                $id_advance_x = $row->cajaResult;
+
+                if($xxx[0]      == "U"){
+                    //--------------->
+                    $this->db->select('`user`.`firstname`,`user`.`secondname`');
+                    $this->db->from('user');
+                    $this->db->where('user.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }elseif($xxx[0] == "C"){
+                    //--------------->
+                    $this->db->select('`clientes`.`firstname`,`clientes`.`secondname`');
+                    $this->db->from('clientes');
+                    $this->db->where('clientes.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }elseif($xxx[0] == "P"){
+                    //--------------->
+                    $this->db->select('`proveedores`.`firstname`,`proveedores`.`secondname`');
+                    $this->db->from('proveedores');
+                    $this->db->where('proveedores.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }
+                
+                $row->usuarioNombre = $data2;
                 $data[] = $row;
-            }
+            }        
+        
         } else {
             $data[] = array("Error"  => 104,"Caja" => "Error");
         }
 
-        return $data;
+        return  $data;
     }
     //--->
 
@@ -228,21 +255,27 @@ class Querys extends CI_Model
     }
     //--->
 
-    function proveedoresDelete()
+    function cajaDelete()
     {
+        /**
+        *   UPDATE CajaEntradaSalida
+        *   SET cajaTipo = "cancelado"
+        *   WHERE
+        *   id_advance = "27786bc5d1e471a691e3"
+        */        
         $random = random_string('sha1', 20);
         $date   = date("Y-m-d H:m:s");
         $r_id   = random_string('md5', 4);
 
-        $data = array('activo' => 'false');
-
+        $data = array('cajaTipo' => 'cancelado');
         $this->db->where('id_advance', $_POST['id_advance']);
-        $this->db->update('proveedores', $data);
+        $this->db->update('CajaEntradaSalida', $data);
 
         //return $status;
+
         $status = [
             "category"    => "Request",
-            "description" => "Delete Proveedores",
+            "description" => "Delete Caja",
             "id advance"  => $random,
             "date"        => $date,
             "http_code"   => 404,
@@ -488,6 +521,147 @@ class Querys extends CI_Model
         
     }
     //--->    
-    
+ 
+    //--->
+    function utilityCancelados($id_advance, $all,$date )
+    {
+        $this->db->select('
+            `CajaEntradaSalida`.id,    
+            `CajaEntradaSalida`.id_advance, 
+            `CajaEntradaSalida`.cajaIdAdvance,
+            `CajaEntradaSalida`.cajaNuevaFecha,
+            `CajaEntradaSalida`.cajaResult,
+            `CajaEntradaSalida`.cajaConcepto,
+            `CajaEntradaSalida`.cajaNotas,
+            `CajaEntradaSalida`.cajaTipo,
+            `CajaEntradaSalida`.cajaEntrada,
+            `CajaEntradaSalida`.cajaSalida,
+            `CajaEntradaSalida`.cajaSaldo,
+            `CajaEntradaSalida`.cajaNoCompra,
+            `CajaEntradaSalida`.cajaTotalMBData
+        ');
+        
+        $this->db->from('CajaEntradaSalida');
+        $this->db->where_not_in('`CajaEntradaSalida`.cajaTipo','entrada');
+        $this->db->where_not_in('`CajaEntradaSalida`.cajaTipo','salida');
+        $this->db->where_not_in('`CajaEntradaSalida`.cajaTipo','inicial');
+        //$this->db->select('`user`.user');
+        //$this->db->join('user', 'CajaEntradaSalida.cajaResult = user.id_advance');
+        
+        $this->db->like('cajaNuevaFecha',$_GET['date']);
+        //$this->db->group_by('CajaEntradaSalida.time'); 
+
+        /*all o single*/
+        if ($all == true) {
+        } elseif ($all == false) {
+            //$this->db->where('caja.`id_advance`', $id_advance);
+        }
+        $this->db->order_by('`CajaEntradaSalida`.id', 'ASC');
+        $this->db->order_by('`CajaEntradaSalida`.time', 'ASC');
+
+        $query = $this->db->get();
+        $row = $query->row_array();
+
+        //---A)
+        if ($query->num_rows() > 0) {
+        
+            foreach ($query->result() as $row) {
+               
+                $xxx = explode('-',$row->cajaResult);
+                $id_advance_x = $row->cajaResult;
+
+                if($xxx[0]      == "U"){
+                    //--------------->
+                    $this->db->select('`user`.`firstname`,`user`.`secondname`');
+                    $this->db->from('user');
+                    $this->db->where('user.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }elseif($xxx[0] == "C"){
+                    //--------------->
+                    $this->db->select('`clientes`.`firstname`,`clientes`.`secondname`');
+                    $this->db->from('clientes');
+                    $this->db->where('clientes.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }elseif($xxx[0] == "P"){
+                    //--------------->
+                    $this->db->select('`proveedores`.`firstname`,`proveedores`.`secondname`');
+                    $this->db->from('proveedores');
+                    $this->db->where('proveedores.`id_advance`',$row->cajaResult);                   
+                    $query2 = $this->db->get();
+                    $row2 = $query2->row_array();
+                    if ($query2->num_rows() > 0) {
+                        foreach ($query2->result() as $row2) {
+                            $data2 = $row2;
+                        }
+                    }
+                    //--------------->
+                }
+                
+                $row->usuarioNombre = $data2;
+                $data[] = $row;
+            }        
+        
+        } else {
+            $data[] = array("Error"  => 104,"Caja" => "Error");
+        }
+
+        return  $data;
+    }
+    //--->
+    //--->
+    function idOperacion()
+    {
+        $random = random_string('sha1', 20);
+        $date   = date("Y-m-d H:m:s");
+        $r_id   = random_string('md5', 4);
+
+        $this->db->select('
+        `CajaEntradaSalida`.id,
+        `CajaEntradaSalida`.id_advance,
+        `CajaEntradaSalida`.time,
+        `CajaEntradaSalida`.idoperacion,
+        ');
+        $this->db->where('idoperacion', $_POST['idOperacion']);
+        $this->db->from('CajaEntradaSalida');
+
+        $query = $this->db->get();
+        $row = $query->row_array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+        } else {
+            $data = [
+                "category"    => "Request",
+                "description" => "Caja Utility Id Operacion",
+                "id advance"  => $random,
+                "date"        => $date,
+                "http_code"   => 404,
+                "code"        => 1001,
+                "request"     => true,
+                "request_id"  => $r_id
+            ];            
+        }
+
+        return $data;
+        
+        
+    }
+    //--->      
 }
 /* End of file database.php */
