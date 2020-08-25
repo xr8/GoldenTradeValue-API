@@ -28,22 +28,22 @@ class Clientes extends CI_Controller
     //--->
     public function createdata()
     {
-    /*
-    Array
-    (
-        [fecha1] => 2020-06-01
-        [rfc1] => 1
-        [pais1] => 2
-        [giro1] => 3
-        [first] => 4
-        [second] => 5
-        [email] => 6
-        [tel] => 7
-        [rfc] => 8
-        [curp] => 9
-        [direccion] => 0
-    )
-    */
+        /*
+        Array
+        (
+            [fecha1] => 2020-06-01
+            [rfc1] => 1
+            [pais1] => 2
+            [giro1] => 3
+            [first] => 4
+            [second] => 5
+            [email] => 6
+            [tel] => 7
+            [rfc] => 8
+            [curp] => 9
+            [direccion] => 0
+        )
+        */
         if (
             is_null($_POST['fecha1'])   or
             is_null($_POST['rfc1'])     or

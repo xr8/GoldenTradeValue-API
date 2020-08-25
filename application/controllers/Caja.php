@@ -26,26 +26,20 @@ class Caja extends CI_Controller
     //--->
 
     //--->
+    /*
+        createdata()
+            $this->Querys->idOperacion();
+            $this->Querys->cajaCreate();
+    */
     public function createdata()
     {
-        /*
-        cajaIdAdvance: U-03fb5ca7539c770b6b
-        cajaNuevoFecha: 2020-07-01
-        cajaResult: C-zr8h0iji96crde4
-        cajaConcepto: concepto 1
-        cajaNotas: nota 1
-        cajaTipo: inicial
-        cajaMonto: 1000
-        cajaNoCompra: 000
-        cajaTotalMBData: 0|0|0|0|0|0|0|0|0|0|1
-        */
+        
         if (
             is_null($_POST['cajaIdAdvance'])  or
             is_null($_POST['cajaNuevaFecha']) or
             is_null($_POST['cajaConcepto'])   or
             is_null($_POST['cajaNotas'])      or
-            is_null($_POST['cajaTipo'])       or
-            is_null($_POST['cajaMonto'])      
+            is_null($_POST['cajaTipo'])       
         ) {
         //----->
             $xr8_data   = "Error: 1001";
@@ -54,18 +48,42 @@ class Caja extends CI_Controller
         //----->
             if($_POST['cajaSave'] == 'true'){
             //----->
-            $idoperacion  = $this->Querys->idOperacion();
-            
-            //print_r($idoperacion);
-                
-                if($idoperacion['code'] == 1001){
-                   $xr8_data   = $this->Querys->cajaCreate();
-                   $xr8_data  = ["code_operacion" => $idoperacion['code'] ,  "time" => Date("Y-m-d H:m:s") , "category"    => "does not exist","http_code"   => 200,"code"        => 1001,"request"     => true];
+
+                $idoperacion = $this->Querys->idOperacion();
+                //print_r($idoperacion['code']);
+
+                if($idoperacion['code'] == 1002){
+
+                    $xr8_data  = "does not exist";
+                    
+                    $xr8_data   = $this->Querys->cajaCreate();
+
+                    $xr8_data  = [
+                        "code_operacion" => $idoperacion['code'],  
+                        "time" => Date("Y-m-d H:m:s") , 
+                        "category"    => "does not exist",
+                        "http_code"   => 200,
+                        "code"        => 1001,
+                        "request"     => true
+                    ];
+
+                }else if($idoperacion['code'] == 1001){
+                    $xr8_data  = "does yes exist";
+                    
+                    $xr8_data  = [
+                        "code_operacion" => $idoperacion['code'],
+                        "time" => Date("Y-m-d H:m:s"), 
+                        "category"    => "if it exists",
+                        "http_code"   => 200,
+                        "code"        => 2001,
+                        "request"     => false
+                    ];
+                    
                 }else{
-                    $xr8_data  = ["code_operacion" => $idoperacion['code'] ,  "time" => Date("Y-m-d H:m:s") , "category"    => "if it exists" ,"http_code"   => 200,"code"        => 2001,"request"     => false];
-                }
-            
-                
+
+                    $xr8_data  = ["Dios" => "No te quiere..."];
+
+                } 
                 
             //----->
             }else{
@@ -81,9 +99,8 @@ class Caja extends CI_Controller
 
         //----->    
         }
-
-       $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
+    
+        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
 
@@ -101,6 +118,8 @@ class Caja extends CI_Controller
         //a181a603769c1f98ad927e7367c7aa51 = all    
         //b326b5062b2f0e69046810717534cb09 = true
         //68934a3e9455fa72420237eb05902327 = false
+        //jJ8KHSMs4J8wzHCIadwn4QeBI7fH9NZO = resumen
+        //Tbvh7VnjCg5fbSPCg7u5
         /*
             id_advance                      = ec66331706175538efd5
             a18a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
@@ -112,7 +131,7 @@ class Caja extends CI_Controller
             $date = $_GET['id_advance'];
         }
 
-        if (empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09') {
+        if ($_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09') {
 
             /*
             all
@@ -122,7 +141,7 @@ class Caja extends CI_Controller
             $id_advance = null;
             $all        = true;
             $xr8_data   = $this->Querys->cajaRead($id_advance, $all, $date);
-        } else if (!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327') {
+        }else if ($_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327') {
 
             /*
             one
@@ -133,7 +152,7 @@ class Caja extends CI_Controller
             $id_advance = $_GET['id_advance'];
             $all        = false;
             $xr8_data   = $this->Querys->cajaRead($id_advance, $all, $date);
-        } else {
+        }else {
             $xr8_data  = array("Error"  => 101);
         }
 
@@ -145,11 +164,7 @@ class Caja extends CI_Controller
     //--->
     public function updatedata()
     {
-
-        //print_r($_POST);
-
-        $id_advance = $_POST['id_advance'];
-        $xr8_data = $this->Querys->clientesUpdate($id_advance);
+        $xr8_data = $this->Querys->cajaUpdate();
 
         //----->json
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));

@@ -64,6 +64,7 @@ class Querys extends CI_Model
   {
 
     //---A)
+    /*
     $this->db->select('
             `clientes`.id_advance,
             `clientes`.time,
@@ -80,17 +81,20 @@ class Querys extends CI_Model
             `razonsocial`.pais              AS rs_pais,
             `razonsocial`.giro              AS rs_giro
             ');
-    $this->db->from('clientes');
+*/            
+$this->db->select('*');
+$this->db->from('clientes');
     
-    $this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
+    
+$this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
 
-    /*all o single*/
-    if($all == true){
-      $this->db->where('clientes.`activo`', 'true');
-    }elseif($all == false){
-      $this->db->where('clientes.`id_advance`', $id_advance);
-      $this->db->where('clientes.`activo`', 'true');
-    }
+
+if($all == true){
+  $this->db->where('clientes.`activo`', 'true');
+}elseif($all == false){
+  $this->db->where('clientes.`id_advance`', $id_advance);
+  $this->db->where('clientes.`activo`', 'true');
+}
 
     $query = $this->db->get();
     $row = $query->row_array();
@@ -101,7 +105,7 @@ class Querys extends CI_Model
         //04/06/2020'
         //'2020-05-30
         
-        $row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
+        //$row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
         $row->Message = "Datasuccessful";
         $data[] = $row;
       }

@@ -10,6 +10,10 @@
 class Querys extends CI_Model
 {
 
+//------------------------------------------------------------------------------------------>    
+/********************************************************************************************
+*                                            CRUD                                           *
+********************************************************************************************/
     //--->
     function cajaCreate()
     {
@@ -31,8 +35,7 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => '0',
-                'cajaSaldo'         => $_POST['cajaMonto'],
-                'cajaMonto'         => $_POST['cajaMonto']
+                'cajaSaldo'         => $_POST['cajaMonto']
             );
 
         }else if($_POST['cajaTipo'] == 'entrada'){
@@ -49,8 +52,7 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => $_POST['cajaMonto'],
                 'cajaSalida'        => '0',
-                'cajaSaldo'         => '0',
-                'cajaMonto'         => $_POST['cajaMonto']
+                'cajaSaldo'         => '0'
             );
 
         }else if($_POST['cajaTipo'] == 'salida'){
@@ -67,8 +69,7 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => $_POST['cajaMonto'],
-                'cajaSaldo'         => '0',
-                'cajaMonto'         => $_POST['cajaMonto']
+                'cajaSaldo'         => '0'
             );
 
         }else{}
@@ -93,13 +94,14 @@ class Querys extends CI_Model
     //--->
 
     //--->
-    function cajaRead($id_advance, $all, $date)
+    function cajaRead($id_advance,$all,$date)
     {
         
  
         $this->db->select('
             `CajaEntradaSalida`.id,    
             `CajaEntradaSalida`.id_advance, 
+            `CajaEntradaSalida`.time,
             `CajaEntradaSalida`.cajaIdAdvance,
             `CajaEntradaSalida`.cajaNuevaFecha,
             `CajaEntradaSalida`.cajaResult,
@@ -121,11 +123,12 @@ class Querys extends CI_Model
         $this->db->like('cajaNuevaFecha',$_GET['date']);
         //$this->db->group_by('CajaEntradaSalida.time'); 
 
-        /*all o single*/
-        if ($all == true) {
-        } elseif ($all == false) {
-            //$this->db->where('caja.`id_advance`', $id_advance);
-        }
+        /*all o single*/                  
+        if ($all == false) {
+            $this->db->where('CajaEntradaSalida.`id_advance`', $id_advance);
+            $one = true;
+        }else{ $one = false;}
+
         $this->db->order_by('`CajaEntradaSalida`.id', 'ASC');
         $this->db->order_by('`CajaEntradaSalida`.time', 'ASC');
 
@@ -136,15 +139,39 @@ class Querys extends CI_Model
         if ($query->num_rows() > 0) {
         
             foreach ($query->result() as $row) {
-               
+
+                if($one == true){
+                
+                    //----->Begin: cajaResult -> Nombre [buscar usuario, clientes o proveedores...]
+                    //--------------->
+                    
+                    $this->db->select('`user`.`id_advance`,`user`.`firstname`,`user`.`secondname`');
+                    $this->db->from   ('user');
+                    $this->db->where  ('user.`id_advance`',$row->cajaIdAdvance);                   
+                    $query3 = $this->db->get();
+                    $row3   = $query3->row_array();
+                    if ($query3->num_rows() > 0) {
+                        foreach ($query3->result() as $row3) {
+                            $data3 = $row3;
+                        }
+                    }
+                    //--------------->
+                    $row->trabajadorNombre = $data3;
+                    
+                    //----->End:   cajaResult -> Nombre [buscar usuario, clientes o proveedores...]   
+                }
+
+                
+                //----->Begin: cajaResult -> Nombre [buscar usuario, clientes o proveedores...]
                 $xxx = explode('-',$row->cajaResult);
                 $id_advance_x = $row->cajaResult;
 
-                if($xxx[0]      == "U"){
+                if(     $xxx[0] == "U"){
+
                     //--------------->
-                    $this->db->select('`user`.`firstname`,`user`.`secondname`');
-                    $this->db->from('user');
-                    $this->db->where('user.`id_advance`',$row->cajaResult);                   
+                    $this->db->select ('`user`.`id_advance`,`user`.`firstname`,`user`.`secondname`');
+                    $this->db->from   ('user');
+                    $this->db->where  ('user.`id_advance`',$row->cajaResult);                   
                     $query2 = $this->db->get();
                     $row2 = $query2->row_array();
                     if ($query2->num_rows() > 0) {
@@ -152,12 +179,13 @@ class Querys extends CI_Model
                             $data2 = $row2;
                         }
                     }
-                    //--------------->
+                    //--------------->                              
                 }elseif($xxx[0] == "C"){
                     //--------------->
-                    $this->db->select('`clientes`.`firstname`,`clientes`.`secondname`');
-                    $this->db->from('clientes');
-                    $this->db->where('clientes.`id_advance`',$row->cajaResult);                   
+
+                    $this->db->select ('`clientes`.`id_advance`,`clientes`.`firstname`,`clientes`.`secondname`');
+                    $this->db->from   ('clientes');
+                    $this->db->where  ('clientes.`id_advance`',$row->cajaResult);                   
                     $query2 = $this->db->get();
                     $row2 = $query2->row_array();
                     if ($query2->num_rows() > 0) {
@@ -168,9 +196,9 @@ class Querys extends CI_Model
                     //--------------->
                 }elseif($xxx[0] == "P"){
                     //--------------->
-                    $this->db->select('`proveedores`.`firstname`,`proveedores`.`secondname`');
-                    $this->db->from('proveedores');
-                    $this->db->where('proveedores.`id_advance`',$row->cajaResult);                   
+                    $this->db->select ('`proveedores`.`id_advance`,`proveedores`.`firstname`,`proveedores`.`secondname`');
+                    $this->db->from   ('proveedores');
+                    $this->db->where  ('proveedores.`id_advance`',$row->cajaResult);                   
                     $query2 = $this->db->get();
                     $row2 = $query2->row_array();
                     if ($query2->num_rows() > 0) {
@@ -180,8 +208,10 @@ class Querys extends CI_Model
                     }
                     //--------------->
                 }
-                
+
                 $row->usuarioNombre = $data2;
+                //----->End:   cajaResult -> Nombre [buscar usuario, clientes o proveedores...]
+
                 $data[] = $row;
             }        
         
@@ -194,7 +224,7 @@ class Querys extends CI_Model
     //--->
 
     //--->
-    function proveedoresUpdate()
+    function cajaUpdate()
     {
         $random = random_string('sha1', 20);
         $date   = date("Y-m-d H:m:s");
@@ -203,46 +233,52 @@ class Querys extends CI_Model
         /*
         Array ( 
             [id_advance] => 0f9385c23d1d5825d266 
-
-            [rfc1] => 3 
-            [pais1] => 3 
-            [giro1] => 3 
-
-            [first] => viernes3 
-            [second] => gomez3 
-            [email] => viernes@gomez.com3 
-            [tel] => 55111122223 
-            [rfc] => SAOK790530QZ23 
-            [curp] => BEML920313HMCLNS093 
-            [direccion] => Av. Paseo de la Reforma No 347, Cuauhtémoc, CP 06500 Ciudad de México, CDMX3 )        
-
         */
-        $data0 = array(
-            'firstname'  => $_POST['first'],
-            'secondname' => $_POST['second'],
-            'email'      => $_POST['email'],
-            'telefono'   => $_POST['tel'],
-            'rfc'        => $_POST['rfc'],
-            'curp'       => $_POST['curp'],
-            'direccion'  => $_POST['direccion']
-        );
+        
+        if($_POST['cajaTipo'] == 'inicial'){
+
+            $data0 = array(
+                'cajaConcepto'      => $_POST['cajaConcepto'],
+                'cajaNotas'         => $_POST['cajaNotas'],
+                'cajaTipo'          => $_POST['cajaTipo'],
+                'cajaEntrada'       => '0',
+                'cajaSalida'        => '0',
+                'cajaSaldo'         => $_POST['cajaMonto']
+            );
+
+        }else if($_POST['cajaTipo'] == 'entrada'){
+
+            $data0 = array(
+                'cajaConcepto'      => $_POST['cajaConcepto'],
+                'cajaNotas'         => $_POST['cajaNotas'],
+                'cajaTipo'          => $_POST['cajaTipo'],
+                'cajaEntrada'       => $_POST['cajaMonto'],
+                'cajaSalida'        => '0',
+                'cajaSaldo'         => '0'
+            );
+
+        }else if($_POST['cajaTipo'] == 'salida'){
+
+            $data0 = array(
+                'cajaConcepto'      => $_POST['cajaConcepto'],
+                'cajaNotas'         => $_POST['cajaNotas'],
+                'cajaTipo'          => $_POST['cajaTipo'],
+                'cajaEntrada'       => '0',
+                'cajaSalida'        => $_POST['cajaMonto'],
+                'cajaSaldo'         => '0'
+            );
+
+        }else{}
+
 
         $this->db->where('id_advance', $_POST['id_advance']);
-        $this->db->update('proveedores', $data0);
+        $this->db->update('CajaEntradaSalida', $data0);
 
-        $data1 = array(
-            'rfc'         => $_POST['rfc1'],
-            'pais'        => $_POST['pais1'],
-            'giro'        => $_POST['giro1'],
-            'fechaconsti' => $_POST['fecha1']
-        );
-        $this->db->where('id_advance_origen', $_POST['id_advance']);
-        $this->db->update('razonsocial', $data1);
 
         //return $status;
         $status = [
             "category"    => "Request",
-            "description" => "Update Proveedores New",
+            "description" => "Update Caja",
             "id advance"  => $random,
             "date"        => $date,
             "http_code"   => 404,
@@ -250,7 +286,7 @@ class Querys extends CI_Model
             "request"     => true,
             "request_id"  => $r_id
         ];
-
+        
         return    $status;
     }
     //--->
@@ -286,12 +322,13 @@ class Querys extends CI_Model
         return    $status;
     }
     //--->
+//------------------------------------------------------------------------------------------>
 
     //--->
     function utilityTotal()
     {
 
-        $this->db->select('`CajaEntradaSalida`.id_advance,`CajaEntradaSalida`.saldo');
+        $this->db->select('*');
         $this->db->from('CajaEntradaSalida');
         $this->db->order_by("id", "desc");
         $this->db->limit("1");
@@ -629,12 +666,7 @@ class Querys extends CI_Model
         $date   = date("Y-m-d H:m:s");
         $r_id   = random_string('md5', 4);
 
-        $this->db->select('
-        `CajaEntradaSalida`.id,
-        `CajaEntradaSalida`.id_advance,
-        `CajaEntradaSalida`.time,
-        `CajaEntradaSalida`.idoperacion,
-        ');
+        $this->db->select('`CajaEntradaSalida`.id,`CajaEntradaSalida`.id_advance,`CajaEntradaSalida`.time,`CajaEntradaSalida`.idoperacion');
         $this->db->where('idoperacion', $_POST['idOperacion']);
         $this->db->from('CajaEntradaSalida');
 
@@ -642,25 +674,32 @@ class Querys extends CI_Model
         $row = $query->row_array();
 
         if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row) {
-                $data[] = $row;
-            }
+                $data = [
+                    "category"    => "Request",
+                    "description" => "Caja Utility Id Operacion - yes",
+                    "id advance"  => $random,
+                    "date"        => $date,
+                    "http_code"   => 404,
+                    "request"     => true,
+                    "request_id"  => $r_id,
+                    "code"        => 1001
+                ];     
+            $data[] = $row;
         } else {
-            $data = [
-                "category"    => "Request",
-                "description" => "Caja Utility Id Operacion",
-                "id advance"  => $random,
-                "date"        => $date,
-                "http_code"   => 404,
-                "code"        => 1001,
-                "request"     => true,
-                "request_id"  => $r_id
-            ];            
+                $data = [
+                    "category"    => "Request",
+                    "description" => "Caja Utility Id Operacion - no",
+                    "id advance"  => $random,
+                    "date"        => $date,
+                    "http_code"   => 404,
+                    "request"     => true,
+                    "request_id"  => $r_id,
+                    "code"        => 1002
+                ];    
+            $data[] = $row;                
         }
 
         return $data;
-        
-        
     }
     //--->      
 }
