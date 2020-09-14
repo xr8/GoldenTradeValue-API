@@ -225,6 +225,31 @@
                     return    $status;
             }
         //--->
+        //--->
+        function userFInd($user,$all){
+            //---A)
+            $this->db->select('
+            `user`.id_advance,
+            `user`.time
+                ');
+            $this->db->from('user');
+            //$this->db->like('user',$user);
+            $this->db->where('user',$user);
 
+                $query = $this->db->get();
+                $row = $query->row_array();
+            //---A)
+
+                if ($query->num_rows() > 0) {
+                    foreach ($query->result() as $row) {
+                        $row->Message = "Datasuccessful";
+                        $row->Existence  = true;
+                        $data[] = $row;
+                        }
+                        return $data;
+                    }
+
+        }
+        //--->
         }
 /* End of file database.php */

@@ -69,13 +69,10 @@ class User extends CI_Controller {
                     empty($_POST['password'])    ||
                     empty($_POST['first'])       ||
                     empty($_POST['second'])      ||
-                    empty($_POST['tel'])         ||
                     empty($_POST['puesto'])
                     ){
-
                         echo "algo post vacio";
                     }else{
-
                         $xr8_data   = $this->Querys->usuarioNew();
                         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
                     }
@@ -159,5 +156,27 @@ class User extends CI_Controller {
                       $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
         }
         //--->
+
+        //--->
+        public function finddata(){
+            /* Rec Log*/
+            $xr8_data = $this->Model_log->logNew();
+
+            //$id_advance = 'CLjFxfEC16HE9AZ948Ws';
+            //a181a603769c1f98ad927e7367c7aa51 = all
+            //b326b5062b2f0e69046810717534cb09 = true
+            //68934a3e9455fa72420237eb05902327 = false
+
+            if ((empty($_GET['user'])) && ($_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327')){            
+                echo 1;
+                }else{
+                    $user       = $_GET['user'];
+                    $all        = False;    
+                }
+
+                $xr8_data   = $this->Querys->userFind($user,$all);
+                $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+        }
+        //--->        
 //----->
 }
