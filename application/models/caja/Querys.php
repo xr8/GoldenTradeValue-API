@@ -15,7 +15,7 @@ class Querys extends CI_Model
 *                                            CRUD                                           *
 ********************************************************************************************/
     //--->
-    function cajaCreate()
+    function cajaCreate($folio)
     {
         $random = random_string('sha1', 20);
         $date   = date("Y-m-d H:m:s");
@@ -35,7 +35,8 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => '0',
-                'cajaSaldo'         => $_POST['cajaMonto']
+                'cajaSaldo'         => $_POST['cajaMonto'],
+                'cajaFolio'         => $folio
             );
 
         }else if($_POST['cajaTipo'] == 'entrada'){
@@ -52,7 +53,8 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => $_POST['cajaMonto'],
                 'cajaSalida'        => '0',
-                'cajaSaldo'         => '0'
+                'cajaSaldo'         => '0',
+                'cajaFolio'         => $folio
             );
 
         }else if($_POST['cajaTipo'] == 'salida'){
@@ -69,7 +71,8 @@ class Querys extends CI_Model
                 'cajaTipo'          => $_POST['cajaTipo'],
                 'cajaEntrada'       => '0',
                 'cajaSalida'        => $_POST['cajaMonto'],
-                'cajaSaldo'         => '0'
+                'cajaSaldo'         => '0',
+                'cajaFolio'         => $folio
             );
 
         }else{}

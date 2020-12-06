@@ -56,7 +56,13 @@ class Caja extends CI_Controller
 
                     $xr8_data  = "does not exist";
                     
-                    $xr8_data   = $this->Querys->cajaCreate();
+                    if($_POST['cajaFolio'] == 'folio'){
+                        $folio = null;
+                    }else{
+                        $folio = $_POST['cajaFolio'];
+                    }
+
+                    $xr8_data   = $this->Querys->cajaCreate($folio);
 
                     $xr8_data  = [
                         "code_operacion" => $idoperacion['code'],  
