@@ -81,36 +81,36 @@ class Querys extends CI_Model
             `razonsocial`.pais              AS rs_pais,
             `razonsocial`.giro              AS rs_giro
             ');
-*/            
-$this->db->select('*');
-$this->db->from('clientes');
-    
-    
-$this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
-
-
-if($all == true){
-  $this->db->where('clientes.`activo`', 'true');
-}elseif($all == false){
-  $this->db->where('clientes.`id_advance`', $id_advance);
-  $this->db->where('clientes.`activo`', 'true');
-}
-
-    $query = $this->db->get();
-    $row = $query->row_array();
-    //---A)
-
-    if ($query->num_rows() > 0) {
-      foreach ($query->result() as $row) {
-        //04/06/2020'
-        //'2020-05-30
+        */            
+    $this->db->select('*');
+    $this->db->from('clientes');
         
-        //$row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
-        $row->Message = "Datasuccessful";
-        $data[] = $row;
-      }
-      return $data;
+        
+    $this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
+
+
+    if($all == true){
+    $this->db->where('clientes.`activo`', 'true');
+    }elseif($all == false){
+    $this->db->where('clientes.`id_advance`', $id_advance);
+    $this->db->where('clientes.`activo`', 'true');
     }
+
+        $query = $this->db->get();
+        $row = $query->row_array();
+        //---A)
+
+        if ($query->num_rows() > 0) {
+        foreach ($query->result() as $row) {
+            //04/06/2020'
+            //'2020-05-30
+            
+            //$row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
+            $row->Message = "Datasuccessful";
+            $data[] = $row;
+        }
+        return $data;
+        }
   }
   //--->
 
@@ -198,9 +198,64 @@ if($all == true){
       "request"     => true,
       "request_id"  => $r_id
     ];
+    
     return    $status;
   }
   //--->
+
+ //--->
+  function searchRead()
+  {
+    $quest = $_GET['term'];
+
+    $random = random_string('sha1', 20);
+    $date   = date("Y-m-d H:m:s");
+    $r_id   = random_string('md5', 4);
+
+    $status = [
+      "category"    => "Search",
+      "description" => "search/querys/quest",
+      "id advance"  => $random,
+      "date"        => $date,
+      "http_code"   => 404,
+      "code"        => 1001,
+      "request"     => true,
+      "request_id"  => $r_id
+    ];
+
+    $this->db->select('*');
+    $this->db->from('clientes');
+    $this->db->or_like('clientes.firstname',$quest);
+    $this->db->or_like('clientes.secondname',$quest);
+    $this->db->order_by("id", "DESC");
+
+    $query = $this->db->get();
+    $row = $query->row_array();
+    
+    if ($query->num_rows() > 0) {
+      foreach ($query->result() as $row) {
+        
+        $id_advance = $row->id_advance;
+        $Type = explode('-',$id_advance);
+        if($Type[0] == "C"){
+          $tipo= "cliente";
+        }else{
+          $tipo = "error";
+        }
+
+          $row->type = $tipo;
+          $data[] = $row;
+      }
+    } else {
+      $data[] = array(
+              "Error"    => 101,
+              "Buscador" => "Error User",
+              "Status"   => $status
+      );
+    }
+    return    $data;
+  }
+ //--->
 
 }
 /* End of file database.php */

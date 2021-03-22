@@ -1,5 +1,5 @@
 <?php
-class Clientes extends CI_Controller
+class Search extends CI_Controller
 {
     //----->
 
@@ -12,16 +12,17 @@ class Clientes extends CI_Controller
         $this->default = $this->load->database('default', TRUE);
 
         $this->load->model('log/Model_log');
-        $this->load->model('clientes/Querys');
-        $xr8_data = $this->Model_log->logNew();
+        $this->load->model('search/Querys');
+        //$log = $this->Model_log->logNew();
+
     }
     //--->
 
     //--->
     public function index()
     {
-        $xr8_data = $this->Model_log->logNew();
-        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+        $xr8_data['index'] = array(array("Page"=>"Search"));
+        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data['index']));
     }
     //--->
 
@@ -134,6 +135,14 @@ class Clientes extends CI_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
+
+    //--->
+    public function querys()
+    {
+        $xr8_data = $this->Querys->searchRead();
+        $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
+    }
+    //--->    
 
     //----->
 }

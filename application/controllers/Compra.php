@@ -1,5 +1,5 @@
 <?php
-class Clientes extends CI_Controller
+class Compra extends CI_Controller
 {
     //----->
 
@@ -12,7 +12,7 @@ class Clientes extends CI_Controller
         $this->default = $this->load->database('default', TRUE);
 
         $this->load->model('log/Model_log');
-        $this->load->model('clientes/Querys');
+        $this->load->model('compra/Querys');
         $xr8_data = $this->Model_log->logNew();
     }
     //--->
@@ -20,7 +20,7 @@ class Clientes extends CI_Controller
     //--->
     public function index()
     {
-        $xr8_data = $this->Model_log->logNew();
+        $xr8_data['index'] = array(array("Page"=>"Compra"));
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->
@@ -68,46 +68,8 @@ class Clientes extends CI_Controller
     //--->
     public function readerdata()
     {
-        
-        //$xr8_data                        = $this->Model_log->logNew();
-        //$id_advance                      = 'CLjFxfEC16HE9AZ948Ws';    
-        //a181a603769c1f98ad927e7367c7aa51 = all    
-        //b326b5062b2f0e69046810717534cb09 = true
-        //68934a3e9455fa72420237eb05902327 = false
-        /*
-            id_advance                      = ec66331706175538efd5
-            a18a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
-        */
-        
-        if(empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == 'b326b5062b2f0e69046810717534cb09'){
-
-            /*
-            all
-            id_advance                       =
-            a181a603769c1f98ad927e7367c7aa51 = b326b5062b2f0e69046810717534cb09
-            */
-            $xr8_data   = array('all' => "all");
-            $id_advance = null;
-            $all        = true;
-            $xr8_data   = $this->Querys->clientesRead($id_advance, $all);
-
-
-        }else if(!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327'){
-            
-            /*
-            one
-            id_advance                       = ec66331706175538efd5
-            a181a603769c1f98ad927e7367c7aa51 = 68934a3e9455fa72420237eb05902327
-            */
-
-            $id_advance = $_GET['id_advance'];
-            $all        = false;
-            $xr8_data   = $this->Querys->clientesRead($id_advance, $all);
-
-        }else{ $xr8_data  = array("Error"  => 101); }
-
+        $xr8_data   = $this->Querys->compraRead();
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
     }
     //--->
 

@@ -60,57 +60,77 @@ class Querys extends CI_Model
   //--->
 
   //--->
-  function clientesRead($id_advance, $all)
+  function compraRead()
   {
+      //---->
+      $this->db->select('
+        metales.id                 AS metales_id,
+        metales.id_advance         AS metales_id_advance,
+        metales.time               AS metales_time,
+        metales.detail_fecha,
+        metales.detail_status,
+        metales.detail_tipo,
+        metales.detail_grs,
+        metales.detail_precio,
+        metales.detail_saldo
+      ');
+      $this->db->select('metales.detail_id_advance, COUNT(metales.detail_id_advance) as detail_total_operaciones');
+      $this->db->from('metales');
+      
+      $this->db->group_by("metales.detail_id_advance");
 
-    //---A)
-    /*clientesRead($id_advance, $all);
-    $this->db->select('
-            `clientes`.id_advance,
-            `clientes`.time,
-            `clientes`.email,
-            `clientes`.firstname,
-            `clientes`.secondname,
-            `clientes`.telefono,
-            `clientes`.rfc,
-            `clientes`.curp,
-            `clientes`.direccion,
-            `razonsocial`.id_advance_origen AS rs_id_advance,
-            `razonsocial`.fechaconsti       AS rs_fecha,
-            `razonsocial`.rfc               AS rs_rfc,
-            `razonsocial`.pais              AS rs_pais,
-            `razonsocial`.giro              AS rs_giro
-            ');
-*/            
-$this->db->select('*');
-$this->db->from('clientes');
-    
-    
-$this->db->join('razonsocial', 'razonsocial.id_advance_origen = clientes.id_advance');
+      $query = $this->db->get();
+      $row = $query->row_array();
+      
+      if ($query->num_rows() > 0) {
+        foreach ($query->result() as $row){ 
+          //---->
+          $detail_id_advance_db = $row->detail_id_advance;
+          $Type = explode('-',$detail_id_advance_db);
+          
+          $Time_minify =explode(' ',$row->metales_time);
+          $row->Time_minify = $Time_minify[0];
+          
+          
+          ######################################################
+          #                   detail_cliente                   #
+          ######################################################
+          
+          $this->db->select('
+            clientes.rfc        AS clientes_rfc,
+            clientes.telefono   AS clientes_telefono,
+            clientes.secondname AS clientes_apellido,
+            clientes.firstname  AS clientes_nombre,
+            clientes.email      AS clientes_email,
+            clientes.curp       AS clientes_curp,
+            clientes.direccion  AS clientes_direccion,
+            clientes.activo     AS clientes_activo,
+            clientes.time       AS clientes_time,
+            clientes.id         AS clientes_id,
+            clientes.id_advance AS clientes_id_advance
+          ');
 
+          $this->db->from('clientes');
+          $this->db->where("clientes.id_advance",$detail_id_advance_db);
 
-if($all == true){
-  $this->db->where('clientes.`activo`', 'true');
-}elseif($all == false){
-  $this->db->where('clientes.`id_advance`', $id_advance);
-  $this->db->where('clientes.`activo`', 'true');
-}
+          $query = $this->db->get();
+          $row2 = $query->row_array();
+          if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row2) {
+                $row->detail_cliente =  $row2;               
+            }
+          }
+          ######################################################
+          #                   detail_cliente                   #
+          ######################################################
 
-    $query = $this->db->get();
-    $row = $query->row_array();
-    //---A)
-
-    if ($query->num_rows() > 0) {
-      foreach ($query->result() as $row) {
-        //04/06/2020'
-        //'2020-05-30
-        
-        //$row->rs_fecha  = date("Y-m-d", strtotime($row->rs_fecha));
-        $row->Message = "Datasuccessful";
+          //---->
         $data[] = $row;
+        }
+
       }
       return $data;
-    }
+      //---->
   }
   //--->
 
