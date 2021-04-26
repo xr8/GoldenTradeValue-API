@@ -82,7 +82,7 @@ class Querys extends CI_Model
             ');
     $this->db->from('proveedores');
     
-    $this->db->join('razonsocial', 'razonsocial.id_advance_origen = proveedores.id_advance');
+    $this->db->n('razonsocial', 'razonsocial.id_advance_origen = proveedores.id_advance');
 
     /*all o single*/
     if($all == true){

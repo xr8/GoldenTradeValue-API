@@ -1,5 +1,5 @@
 <?php
-class Metalesentrega extends CI_Controller
+class Metalesdetalles extends CI_Controller
 {
     //----->
 
@@ -12,7 +12,7 @@ class Metalesentrega extends CI_Controller
         $this->default = $this->load->database('default', TRUE);
 
         $this->load->model('log/Model_log');
-        $this->load->model('metalesentrega/Querys');
+        $this->load->model('metalesdetalles/Querys');
         $xr8_data = $this->Model_log->logNew();
     }
     //--->
@@ -33,30 +33,18 @@ class Metalesentrega extends CI_Controller
     */
     public function createdata()
     {
-  
-        if (
-            is_null($_POST) /*  or
-            is_null($_POST['cajaNuevaFecha'])    */
-        ) {
-        //----->
-            $xr8_data   = "Error: 1001";
-        //----->
-        } else {
-        //----->
-                $xr8_data   = $this->Querys->metalesCreate();
-                $xr8_data  = [
-                    "time" => Date("Y-m-d H:m:s") , 
-                    "category"    => "does not exist",
-                    "http_code"   => 200,
-                    "code"        => 1001,
-                    "request"     => true
-                ];
-            //----->
-            }
-
-    
+        if ($_GET['type'] == "generarcierre"){
+            $xr8_data   = $this->Querys->metalesCreate();
+        }else if ($_GET['type'] == "generarsaldo"){
+            $xr8_data   = $this->Querys->saldoCreate();
+        }else if ($_GET['type'] == "generarcierreunico"){
+            $xr8_data   = $this->Querys->metalesCreateUnico();
+        }else if ($_GET['type'] == "generarmultipleentrada"){
+            $xr8_data   = $this->Querys->metalesCreateMultiple();
+        }else {
+            $xr8_data  = array("Error"  => 101);
+        }
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
-
     }
     //--->
 
@@ -64,20 +52,27 @@ class Metalesentrega extends CI_Controller
     /*
     /metales/readerdata?type=cierres
     date=2020-07
+    metalesdetalles/readerdata/?type=entregas&id=C-zr8h0iji96crde4
     */
     public function readerdata()
     {
-       
         if ($_GET['type'] == "cierres"){
-            $xr8_data   = $this->Querys->metalesRead();
-        }else if ($_GET['type'] == "one"){
-            $xr8_data   = $this->Querys->metalesReadOne();
+            $xr8_data   = $this->Querys->metalesdetallesRead();
         }else if ($_GET['type'] == "entregas"){
             $xr8_data   = $this->Querys->metalesReadEntregas();
+        }else if ($_GET['type'] == "cierresdos"){
+            $xr8_data   = $this->Querys->metalesReadCierres();
+        }else if ($_GET['type'] == "pagos"){
+            $xr8_data   = $this->Querys->metalesReadPagos();
+        }else if ($_GET['type'] == "one"){
+            $xr8_data   = $this->Querys->metalesReadOne();
+        }else if ($_GET['type'] == "saldo"){
+            $xr8_data   = $this->Querys->metaleSaldoBase();
+        }else if ($_GET['type'] == "saldoactual"){
+            $xr8_data   = $this->Querys->metaleSaldoActual();
         }else {
             $xr8_data  = array("Error"  => 101);
         }
-
 
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
