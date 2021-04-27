@@ -70,7 +70,7 @@ class Querys extends CI_Model
     $x = $_POST['generar_c_precio'];
     $this->db->set('detail_saldo_actual',"detail_saldo_actual+$x", FALSE);
     $this->db->where('detail_id_advance', $_POST['save_id_advance']);
-    $this->db->update('saldo');
+    //$this->db->update('saldo');
 
         $status = [
             "category"    => "Request",
