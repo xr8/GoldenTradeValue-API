@@ -43,56 +43,56 @@ class Querys extends CI_Model
         }
 
         //-------------------------------------------------------------------------> Begin: Pagos
+            /*  
+                $random -> entregas - cierres dos - pagos = id_advance
 
-            //#	ID Cierre	Fecha	Total	Pagos	Saldo	Observaciones
-    
+                save_id_advance: 5036c41a0a1aec721aac    -> metales_id_advance
+                save_id_advance_user: C-zr8h0iji96crde4  -> metales_detail_id_advance   
+                                                         -> metales_detail_type
+
+                metales_saldo_actual: 0.00
+                
+                save_nolext: 1983
+                save_grsaf: 0
+                
+                save_barra: 100
+                save_ley: 24
+                save_fino: 100.00
+                
+                save_finopza: 100.00
+                save_preio: 1255.00
+                ->importe
+
+                save_pagos: 100000
+                save_total: 125500.00
+                save_saldo: 25500.00
+
+            */
             /********************************************
             *           tabla: metales                  *
             ********************************************/         
             //------------------------------------------>  
-           
-            //$this->db->set('detail_fecha',date("Y-m-d H:i:s"), FALSE);
             $this->db->set('detail_grs',"detail_grs-$fino_x", FALSE);
                 $this->db->where('id_advance', $_POST['save_id_advance']);
-                    $this->db->update('metales');
-            
+                    //$this->db->update('metales');
             //------------------------------------------>  
             
             /********************************************
             *           tabla: saldo                 *
             ********************************************/         
             //------------------------------------------>  
-            //saldo+total-pago
-            
             $save_total = $_POST['save_total'];
             $save_pagos = $_POST['save_pagos'];
             
-            //$this->db->set('detail_time_update',"date('Y-m-d H:i:s')", FALSE);
             $this->db->set('detail_saldo_actual',"detail_saldo_actual+$save_total-$save_pagos", FALSE);
                 $this->db->where('detail_id_advance', $_POST['save_id_advance_user']);
-                    $this->db->update('saldo');
-                
-
+                    //$this->db->update('saldo');
             //------------------------------------------>  
             
             /********************************************
             *           tabla: entregas                 *
             ********************************************/         
             //------------------------------------------>  
-            /*
-            id
-            id_advance
-            time
-            metales_id_advance        -> save_id_advance_user: C-zr8h0iji96crde4
-            metales_detail_id_advance -> save_id_advance: ce35a5da236708d702a9
-            entregas_fecha
-            entregas_no_ext
-            entregas_grs_af
-            entregas_barra
-            entregas_ley
-            entregas_fino
-            */
-
             $metales_entregas_data = array(
                 'id_advance'                => $random,
                 'metales_id_advance'        => $_POST['save_id_advance_user'],
@@ -105,39 +105,13 @@ class Querys extends CI_Model
                 'entregas_fino'             => $fino_x
             );
 
-            $this->db->insert('metales_entregas',$metales_entregas_data);            
+            //$this->db->insert('metales_entregas',$metales_entregas_data);            
             //------------------------------------------>  
             
             /********************************************
             *           tabla: entregas                 *
             ********************************************/         
             //------------------------------------------>  
-            /*
-            id
-            id_advance
-            time
-            metales_id_advance        -> save_id_advance_user: C-zr8h0iji96crde4
-            metales_detail_id_advance -> save_id_advance: ce35a5da236708d702a9
-            entregas_fecha
-            cierres_fino
-            cierres_precio
-            cierres_importe
-
-            save_id_advance: ce35a5da236708d702a9
-            save_preio: 1129.21
-            metales_saldo_actual: 8230.25
-            save_nolext: 
-            save_grsaf: 
-            save_barra: 10
-            save_ley: 24
-            save_fino: 10.00
-            save_finopza: 20
-            save_pagos: 10000
-            save_total: 22584.20
-            save_saldo: 20814.45
-            save_id_advance_user: C-zr8h0iji96crde4
-            */
-            
             $metales_cierres_data = array(
                 'id_advance'                => $random ,
                 'metales_id_advance'        => $_POST['save_id_advance'],
@@ -148,44 +122,13 @@ class Querys extends CI_Model
                 'cierres_importe'           => $fino_x*$_POST['save_preio'],
             );
 
-            $this->db->insert('metales_cierres',$metales_cierres_data);
-            
-
+            //$this->db->insert('metales_cierres',$metales_cierres_data);
             //------------------------------------------>  
-
-
             
             /********************************************
             *           tabla: pagos                 *
             ********************************************/         
-            //------------------------------------------>  
-            /*
-            id
-            id_advance
-            time
-            metales_id_advance        -> save_id_advance_user: C-zr8h0iji96crde4
-            metales_detail_id_advance -> save_id_advance: ce35a5da236708d702a9
-            entregas_fecha
-            pagos_total
-            pagos_pagos
-            pagos_saldos
-            pagos_observaciones
-
-            save_id_advance: ce35a5da236708d702a9
-            save_preio: 1129.21
-            metales_saldo_actual: 8230.25
-            save_nolext: 
-            save_grsaf: 
-            save_barra: 10
-            save_ley: 24
-            save_fino: 10.00
-            save_finopza: 20
-            save_pagos: 10000
-            save_total: 22584.20
-            save_saldo: 20814.45
-            save_id_advance_user: C-zr8h0iji96crde4
-            */
-            
+            //------------------------------------------>              
             $metales_pagos_data = array(
                 'id_advance'                => $random ,
                 'metales_id_advance'        => $_POST['save_id_advance'],
@@ -196,13 +139,8 @@ class Querys extends CI_Model
                 'pagos_saldos'              => $_POST['save_saldo'],
                 'pagos_observaciones'       => 0
             );
-
-            $this->db->insert('metales_pagos',$metales_pagos_data);
-            
-
+            //$this->db->insert('metales_pagos',$metales_pagos_data);
             //------------------------------------------>              
-
-
 
         //-------------------------------------------------------------------------> End:   Pagos
         $status[] = array(
@@ -340,7 +278,7 @@ class Querys extends CI_Model
         ');
         $this->db->from('metales_entregas');
         //$this->db->join('metales', 'metales.id_advance = `metales_entregas`.metales_detail_id_advance');
-        $this->db->where('`metales_entregas`.metales_detail_id_advance', $_GET['id']);
+        $this->db->where   ('`metales_entregas.metales_id_advance',$_GET['id']);
         $this->db->order_by("`metales_entregas`.id", "DESC");
 
         $query = $this->db->get();

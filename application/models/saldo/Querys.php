@@ -101,10 +101,29 @@ class Querys extends CI_Model
             saldo.detail_id_advance = '30063c359cd725358a5a'
             GROUP BY
             saldo.id_advance
+
+            SELECT
+            Count(saldo.id) AS saldo,
+            clientes.firstname,
+            clientes.secondname,
+            saldo.detail_saldo_actual,
+            saldo.detail_saldo
+            FROM
+            saldo
+            INNER JOIN clientes ON saldo.detail_id_advance = clientes.id_advance
+            WHERE
+            saldo.detail_id_advance = 'C-zr8h0iji96crde4'            
         */        
  
-        $this->db->select('Count(saldo.id) AS saldo');
+        $this->db->select('
+        Count(saldo.id) AS saldo,
+        clientes.firstname,
+        clientes.secondname,
+        saldo.detail_saldo_actual,
+        saldo.detail_saldo
+        ');
         $this->db->from('saldo');
+        $this->db->join    ('clientes', 'saldo.detail_id_advance = clientes.id_advance');
         $this->db->where('saldo.`detail_id_advance`',$_GET['id']);
 
         $query = $this->db->get();

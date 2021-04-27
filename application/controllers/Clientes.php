@@ -95,9 +95,11 @@ class Clientes extends CI_Controller
         }else if(!empty($_GET['id_advance']) && $_GET['a181a603769c1f98ad927e7367c7aa51'] == '68934a3e9455fa72420237eb05902327'){
             
             /*
+                localhost/server/DevOps/GoldenTradeValue/GoldenTradeValue-API/index.php/clientes/readerdata?
+                id_advance=&
+                zr8h0iji96crde4&a181a603769c1f98ad927e7367c7aa51=68934a3e9455fa72420237eb05902327            
             one
-            id_advance                       = ec66331706175538efd5
-            a181a603769c1f98ad927e7367c7aa51 = 68934a3e9455fa72420237eb05902327
+            
             */
 
             $id_advance = $_GET['id_advance'];
