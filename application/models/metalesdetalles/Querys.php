@@ -48,33 +48,41 @@ class Querys extends CI_Model
 
                 save_id_advance: 5036c41a0a1aec721aac    -> metales_id_advance
                 save_id_advance_user: C-zr8h0iji96crde4  -> metales_detail_id_advance   
-                                                         -> metales_detail_type
-
-                metales_saldo_actual: 0.00
-                
+               
+                save_id_advance: 5036c41a0a1aec721aac    -> id_advance metales
+                save_preio: 1255.00
+                metales_saldo_actual: 1138.40
                 save_nolext: 1983
                 save_grsaf: 0
-                
                 save_barra: 100
                 save_ley: 24
                 save_fino: 100.00
-                
                 save_finopza: 100.00
-                save_preio: 1255.00
-                ->importe
-
-                save_pagos: 100000
+                save_pagos: 120000
                 save_total: 125500.00
-                save_saldo: 25500.00
-
+                save_saldo: 6638.40
+                save_id_advance_user: C-zr8h0iji96crde4
+                save_vale: 101
             */
+            /********************************************
+            *           tabla: metales                  *
+            *   'detail_id_advance'  =>
+            ********************************************/         
+            //------------------------------------------>              
+            $datax = array(
+                'id_advance'         => random_string('sha1', 20),
+                'detail_id_advance'  => $_POST['save_id_advance']
+            );
+            $this->db->insert('vale', $datax);  
+            //------------------------------------------>
+
             /********************************************
             *           tabla: metales                  *
             ********************************************/         
             //------------------------------------------>  
             $this->db->set('detail_grs',"detail_grs-$fino_x", FALSE);
                 $this->db->where('id_advance', $_POST['save_id_advance']);
-                    //$this->db->update('metales');
+                    $this->db->update('metales');
             //------------------------------------------>  
             
             /********************************************
@@ -84,9 +92,13 @@ class Querys extends CI_Model
             $save_total = $_POST['save_total'];
             $save_pagos = $_POST['save_pagos'];
             
+            $x      = $_POST['save_id_advance_user'];
+            $x_type = explode("-", $x);
+            if($x_type[0] == "C"){$x_type_value = "clientes";}
+
             $this->db->set('detail_saldo_actual',"detail_saldo_actual+$save_total-$save_pagos", FALSE);
                 $this->db->where('detail_id_advance', $_POST['save_id_advance_user']);
-                    //$this->db->update('saldo');
+                    $this->db->update('saldo');
             //------------------------------------------>  
             
             /********************************************
@@ -96,8 +108,10 @@ class Querys extends CI_Model
             $metales_entregas_data = array(
                 'id_advance'                => $random,
                 'metales_id_advance'        => $_POST['save_id_advance_user'],
+                'metales_detail_type'       => $x_type_value,
                 'metales_detail_id_advance' => $_POST['save_id_advance'],
                 'entregas_fecha'            => $date,
+                'entregas_no_vale'          => $_POST['save_vale'],
                 'entregas_no_ext'           => $_POST['save_nolext'],
                 'entregas_grs_af'           => $_POST['save_grsaf'],
                 'entregas_barra'            => $_POST['save_barra'],
@@ -105,7 +119,7 @@ class Querys extends CI_Model
                 'entregas_fino'             => $fino_x
             );
 
-            //$this->db->insert('metales_entregas',$metales_entregas_data);            
+            $this->db->insert('metales_entregas',$metales_entregas_data);            
             //------------------------------------------>  
             
             /********************************************
@@ -115,6 +129,7 @@ class Querys extends CI_Model
             $metales_cierres_data = array(
                 'id_advance'                => $random ,
                 'metales_id_advance'        => $_POST['save_id_advance'],
+                'metales_detail_type'       => $x_type_value,
                 'metales_detail_id_advance' => $_POST['save_id_advance_user'],
                 'entregas_fecha'            => $date,
                 'cierres_fino'              => $fino_x,
@@ -122,7 +137,7 @@ class Querys extends CI_Model
                 'cierres_importe'           => $fino_x*$_POST['save_preio'],
             );
 
-            //$this->db->insert('metales_cierres',$metales_cierres_data);
+            $this->db->insert('metales_cierres',$metales_cierres_data);
             //------------------------------------------>  
             
             /********************************************
@@ -132,6 +147,7 @@ class Querys extends CI_Model
             $metales_pagos_data = array(
                 'id_advance'                => $random ,
                 'metales_id_advance'        => $_POST['save_id_advance'],
+                'metales_detail_type'       => $x_type_value,
                 'metales_detail_id_advance' => $_POST['save_id_advance_user'],
                 'entregas_fecha'            => $date,
                 'pagos_total'               => $_POST['save_total'],
@@ -139,7 +155,7 @@ class Querys extends CI_Model
                 'pagos_saldos'              => $_POST['save_saldo'],
                 'pagos_observaciones'       => 0
             );
-            //$this->db->insert('metales_pagos',$metales_pagos_data);
+            $this->db->insert('metales_pagos',$metales_pagos_data);
             //------------------------------------------>              
 
         //-------------------------------------------------------------------------> End:   Pagos
