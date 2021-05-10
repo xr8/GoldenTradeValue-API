@@ -41,6 +41,8 @@ class Metalesdetalles extends CI_Controller
             $xr8_data   = $this->Querys->metalesCreateUnico();
         }else if ($_GET['type'] == "generarmultipleentrada"){
             $xr8_data   = $this->Querys->metalesCreateMultiple();
+        }else if ($_GET['type'] == "cierreSimple"){
+            $xr8_data   = $this->Querys->cierreSimpleCreate();
         }else {
             $xr8_data  = array("Error"  => 101);
         }

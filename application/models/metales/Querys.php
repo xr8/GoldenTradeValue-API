@@ -25,7 +25,7 @@ class Querys extends CI_Model
         generar_c_grs: 100
         generar_c_precio: 1129.21
       */
-        $random = random_string('sha1', 20);
+        $random = random_string('alnum', 20);
         $date   = date("Y-m-d H:m:s");
         $r_id   = random_string('md5', 4);
         
@@ -90,74 +90,30 @@ class Querys extends CI_Model
   //--->
   function metalesRead()
   {
-      //---->
-      $this->db->select('
-        metales.id                 AS metales_id,
-        metales.id_advance         AS metales_id_advance,
-        metales.time               AS metales_time,
-        metales.detail_fecha,
-        metales.detail_status,
-        metales.detail_tipo,
-        metales.detail_grs,
-        metales.detail_precio
-      ');
-      $this->db->select('metales.detail_id_advance, COUNT(metales.detail_id_advance) as detail_total_operaciones');
-      $this->db->from('metales');
-      
-      $this->db->group_by("metales.detail_id_advance");
-
+    $this->db->select("
+    clientes.id,
+    clientes.email,
+    clientes.firstname,
+    clientes.secondname,
+    clientes.telefono,
+    clientes.id_advance,
+    clientes.activo,
+    saldo.detail_id_advance   AS s_id_advance,
+    saldo.detail_saldo        AS s_detail_saldo,
+    saldo.detail_saldo_actual AS s_saldo_actual
+    ");
+    $this->db->from  ("clientes");
+    $this->db->join  ('saldo'   , 'saldo.detail_id_advance = clientes.id_advance');
+    $this->db->where ('clientes.`activo`','true');
+    
       $query = $this->db->get();
       $row = $query->row_array();
       
-      if ($query->num_rows() > 0) {
-        foreach ($query->result() as $row){ 
-          //---->
-          $detail_id_advance_db = $row->detail_id_advance;
-          $Type = explode('-',$detail_id_advance_db);
-          
-          $Time_minify =explode(' ',$row->metales_time);
-          $row->Time_minify = $Time_minify[0];
-          
-          
-          ######################################################
-          #                   detail_cliente                   #
-          ######################################################
-          
-          $this->db->select('
-            clientes.rfc        AS clientes_rfc,
-            clientes.telefono   AS clientes_telefono,
-            clientes.secondname AS clientes_apellido,
-            clientes.firstname  AS clientes_nombre,
-            clientes.email      AS clientes_email,
-            clientes.curp       AS clientes_curp,
-            clientes.direccion  AS clientes_direccion,
-            clientes.activo     AS clientes_activo,
-            clientes.time       AS clientes_time,
-            clientes.id         AS clientes_id,
-            clientes.id_advance AS clientes_id_advance
-          ');
+        if ($query->num_rows() > 0) {
+          foreach ($query->result() as $row){$data[] = $row;}
+        }else{$data[] = array("Error"  => 104,"Caja" => "Error");}
 
-          $this->db->from('clientes');
-          $this->db->where("clientes.id_advance",$detail_id_advance_db);
-
-          $query = $this->db->get();
-          $row2 = $query->row_array();
-          if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row2) {
-                $row->detail_cliente =  $row2;               
-            }
-          }
-          ######################################################
-          #                   detail_cliente                   #
-          ######################################################
-
-          //---->
-        $data[] = $row;
-        }
-
-      }
-      return $data;
-      //---->
+          return $data;
   }
   //--->
 

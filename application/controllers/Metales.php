@@ -25,6 +25,7 @@ class Metales extends CI_Controller
     //--->
     
     //--->
+    //index.php/metales/createdata?type=generarcierre
     public function createdata()
     {
   
@@ -52,7 +53,7 @@ class Metales extends CI_Controller
     //--->
 
     //--->
-    public function readerdata()
+    public function readedata()
     {
        
         if ($_GET['type'] == "only_one"){

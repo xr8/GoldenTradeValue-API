@@ -116,7 +116,7 @@ class Querys extends CI_Model
         */        
  
         $this->db->select('
-        Count(saldo.id) AS saldo,
+        saldo.id AS saldo,
         clientes.firstname,
         clientes.secondname,
         saldo.detail_saldo_actual,

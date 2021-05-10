@@ -68,7 +68,7 @@ class Clientes extends CI_Controller
     //--->
     public function readerdata()
     {
-        
+
         //$xr8_data                        = $this->Model_log->logNew();
         //$id_advance                      = 'CLjFxfEC16HE9AZ948Ws';    
         //a181a603769c1f98ad927e7367c7aa51 = all    

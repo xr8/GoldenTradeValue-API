@@ -74,8 +74,8 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
             define("INDEX_PAGE", APP_URL.'index.php/');
             define("DEFAULTROUTER", 'api');
 
-            define("HOSTNAME", 'labs26.com');
-            define("USERNAME", 'labs26');
+            define("HOSTNAME", 'localhost');
+            define("USERNAME", 'gtvlocalhost');
             define("PASSWORD", '12345aeiou');
             define("DATABASE", 'labs26');
         //----->
