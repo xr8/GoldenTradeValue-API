@@ -53,7 +53,6 @@ class Querys extends CI_Model
     //--->
     function metalesdetallesRead()
     {
-
         $this->db->select('
             `metales`.id                  AS m_id,
             `metales`.id_advance          AS m_id_advance,
@@ -83,7 +82,16 @@ class Querys extends CI_Model
                 $data[] = $row;
             }
         } else {
-            $data[] = array("Error"  => 104,"Caja" => "Error");
+            $date   = date("Y-m-d H:m:s");
+            $data[] = array(
+                "Time"       => $date,
+                "Message"    => "Error Cierres",
+                "Code"       => 104,
+                "Contorller" => "metalesdetalles",
+                "class"      => "metalesdetalles",
+                "fuction"    => "metalesdetallesRead",
+                "id"         => "cierres"
+            );
         }
 
         return  $data;
@@ -147,7 +155,16 @@ class Querys extends CI_Model
                 $data[] = $row;
             }
         } else {
-            $data[] = array("Error"  => 104,"Metales Detalles" => "Error");
+            $date   = date("Y-m-d H:m:s");
+            $data[] = array(
+                "Time"       => $date,
+                "Message"    => "Error Entregas",
+                "Code"       => 104,
+                "Contorller" => "metalesdetalles",
+                "class"      => "metalesdetalles",
+                "fuction"    => "metalesReadEntregas",
+                "id"         => "entregas"
+            );
         }
 
         return  $data;
@@ -157,23 +174,6 @@ class Querys extends CI_Model
     //--->
     function metalesReadCierres()
     {
-        /*
-        SELECT
-        metales_cierres.id,
-        metales_cierres.id_advance,
-        metales_cierres.time,
-        metales_cierres.metales_id_advance,
-        metales_cierres.metales_detail_id_advance,
-        metales_cierres.cierres_fino,
-        metales_cierres.cierres_precio,
-        metales_cierres.cierres_importe,
-        metales.id         AS m_id,
-        metales.id_advance AS m_id_advance
-        FROM metales_cierres
-        INNER JOIN metales on metales.id_advance = metales_cierres.metales_id_advance
-        WHERE metales_cierres.metales_detail_id_advance = 'C-zr8h0iji96crde4'
-        ORDER BY metales_cierres.id DESC
-        */        
 
         $this->db->select  ('        
             metales_cierres.id,
@@ -199,7 +199,16 @@ class Querys extends CI_Model
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row){$data[] = $row;}
             }else{
-                $data[] = array("Error"  => 104,"Metales Detalles" => "Error");
+                $date   = date("Y-m-d H:m:s");
+                $data[] = array(
+                    "Time"       => $date,
+                    "Message"    => "Error Cierres dos",
+                    "Code"       => 104,
+                    "Contorller" => "metalesdetalles",
+                    "class"      => "metalesdetalles",
+                    "fuction"    => "metalesReadCierres",
+                    "id"         => "cierresdos"
+                );
                 }
         //----->
 
@@ -210,28 +219,6 @@ class Querys extends CI_Model
     //--->
     function metalesReadPagos()
     {
-        /*
-        SELECT
-            metales_pagos.id,
-            metales_pagos.id_advance,
-            metales_pagos.time,
-            metales_pagos.metales_id_advance,
-            metales_pagos.metales_detail_id_advance,
-            metales_pagos.pagos_total,
-            metales_pagos.pagos_pagos,
-            metales_pagos.pagos_saldos,
-            metales_pagos.pagos_observaciones,
-            metales.id AS m_id,
-            metales.id_advance AS m_id_advance
-        FROM
-        metales_pagos
-        INNER JOIN metales ON metales.id_advance = metales_pagos.metales_id_advance
-        WHERE
-        metales_pagos.metales_detail_id_advance = 'C-zr8h0iji96crde4'
-        ORDER BY
-        metales_pagos.id DESC
-        */        
-
         $this->db->select  ('        
             metales_pagos.id,
             metales_pagos.id_advance,
@@ -256,7 +243,16 @@ class Querys extends CI_Model
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row){$data[] = $row;}
             }else{
-                $data[] = array("Error"  => 104,"Metales Detalles" => "Error");
+                $date   = date("Y-m-d H:m:s");
+                $data[] = array(
+                    "Time"       => $date,
+                    "Message"    => "Error Cierres dos",
+                    "Code"       => 104,
+                    "Contorller" => "metalesdetalles",
+                    "class"      => "metalesdetalles",
+                    "fuction"    => "metalesReadCierres",
+                    "id"         => "pagos"
+                );
                 }
         //----->
 
@@ -892,17 +888,7 @@ class Querys extends CI_Model
         if($x_type[0] == "C"){$x_type_value = "clientes";}
         //-------------------------------------------------------------------------> Begin: Pagos
 
-            /********************************************
-            *           tabla: metales                  *
-            *   'detail_id_advance'  =>
-            ********************************************/         
-            //------------------------------------------>              
-            $datax = array(
-                'id_advance'         => random_string('alnum', 20),
-                'detail_id_advance'  => $_POST['save_id_advance']
-            );
-            $this->db->insert('vale', $datax);  
-            //------------------------------------------>
+
 
             /********************************************
             *           tabla: metales                  *
@@ -974,7 +960,7 @@ class Querys extends CI_Model
             ********************************************/         
             //------------------------------------------>              
             $metales_pagos_data = array(
-                'id_advance'                => $random ,
+                'id_advance'                => $random,
                 'metales_id_advance'        => $_POST['save_id_advance'],
                 'metales_detail_type'       => $x_type_value,
                 'metales_detail_id_advance' => $_POST['save_id_advance_user'],
@@ -982,10 +968,22 @@ class Querys extends CI_Model
                 'pagos_total'               => $_POST['input_cs_total'],
                 'pagos_pagos'               => $_POST['input_cs_pagos'],
                 'pagos_saldos'              => $_POST['input_cs_saldo'],
-                'pagos_observaciones'       => 0
+                'pagos_observaciones'       => $_POST['input_cs_observaciones']
             );
             $this->db->insert('metales_pagos',$metales_pagos_data);
             //------------------------------------------>              
+
+            /********************************************
+            *           tabla: metales                  *
+            *   'detail_id_advance'  =>
+            ********************************************/         
+            //------------------------------------------>              
+            $dataVale = array(
+                'id_advance'         => random_string('alnum', 20),
+                'detail_id_advance'  => $random
+            );
+            $this->db->insert('vale',$dataVale);  
+            //------------------------------------------>
 
             $status[] = array(
                 "Ok"      => 101,

@@ -35,6 +35,7 @@ class Metales extends CI_Controller
         //----->
         } else {
         //----->
+        
                 $xr8_data   = $this->Querys->metalesCreate();
                 $xr8_data  = [
                     "time" => Date("Y-m-d H:m:s") , 
