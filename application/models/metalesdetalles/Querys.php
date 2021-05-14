@@ -55,7 +55,6 @@ class Querys extends CI_Model
             `metales`.detail_fecha        AS m_detail_fecha,
             `metales`.detail_status       AS m_detail_status,
             `metales`.detail_tipo         AS m_detail_tipo,
-            `metales`.detail_metal        AS m_detail_metal,
             `metales`.detail_grs_original AS m_detail_grs_original,
             `metales`.detail_grs          AS m_detail_grs,
             `metales`.detail_precio       AS m_detail_precio
@@ -543,7 +542,63 @@ class Querys extends CI_Model
                 
                 return    $status;
         }
-        //--->    
+        //--->  
+        //--->v
+        function pagosCreate()
+        {
+
+            $random = random_string('alnum', 20);
+            $date   = date("Y-m-d");
+            $r_id    = random_string('md5', 4);
+            /*
+            generarPagoTotal: 
+            generarPago: 100000
+            generarTipoPago: pago
+            generarSaldo: 100000
+            generarObservaciones: anticipo por inicio de operaciones
+            */
+
+            $metales_pagos_data = array(
+                'id_advance'                => $random,
+                'entregas_fecha'            => $date,
+                'metales_id_advance'        => $_POST['save_id_advance_user'],
+                'pagos_total'               => $_POST['generarPagoTotal'],
+                'pagos_pagos'               => $_POST['generarPago'],
+                'pagos_tipopagos'           => $_POST['generarTipoPago'],
+                'pagos_saldos'              => $_POST['generarSaldo'],
+                'pagos_observaciones'       => $_POST['generarObservaciones']
+            );
+            
+            $this->db->insert('metales_pagos',$metales_pagos_data);
+
+                /********************************************
+                *           tabla: saldo                 *
+                ********************************************/         
+                //------------------------------------------>  
+                $xTotal = floatval($_POST['generarPagoTotal']);
+                $xPago  = floatval($_POST['generarPago']);
+                $x      =$xTotal-$xPago;
+
+                $this->db->set('detail_saldo_actual',"detail_saldo_actual+$x", FALSE);
+                    $this->db->where('detail_id_advance',$_POST['save_id_advance_user']);
+                        $this->db->update('saldo');
+                //------------------------------------------>  
+
+                //------------------------------------------>              
+
+                $status[] = array(
+                    "Ok"      => 101,
+                    "Cierres" => "Ok",
+                    "Saldo"   => "Ok",
+                    "Entregas"=> "Ok",
+                    "Cierres" => "Ok",
+                    "Pagos"   => "Ok",
+                    "demo"    => $metales_pagos_data
+                );
+                
+                return    $status;
+        }
+        //--->            
     //----------------------------------------------------------------------> Metales create 
 
 
@@ -636,7 +691,7 @@ class Querys extends CI_Model
                 ********************************************/         
                 //------------------------------------------>              
                 $datax = array(
-                    'id_advance'         =>  random_string('sha1', 20),
+                    'id_advance'         =>  random_string('alnum', 20),
                     'detail_id_advance'  =>  $metales_id_advance
                 );
                 $this->db->insert('vale', $datax);  

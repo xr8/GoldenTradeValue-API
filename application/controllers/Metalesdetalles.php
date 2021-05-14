@@ -33,8 +33,14 @@ class Metalesdetalles extends CI_Controller
     */
     public function createdata()
     {
+        /*
+        save tabs cierres ?type=generarcierre
+        save tabs pagos   ?type=saveTabsPago
+        */
         if ($_GET['type'] == "generarcierre"){
             $xr8_data   = $this->Querys->metalesCreate();
+        }else if ($_GET['type'] == "saveTabsPago"){
+            $xr8_data   = $this->Querys->pagosCreate();
         }else if ($_GET['type'] == "generarsaldo"){
             $xr8_data   = $this->Querys->saldoCreate();
         }else if ($_GET['type'] == "generarcierreunico"){
@@ -46,6 +52,7 @@ class Metalesdetalles extends CI_Controller
         }else {
             $xr8_data  = array("Error"  => 101);
         }
+                
         $this->output->set_content_type('application/json')->set_output(json_encode($xr8_data));
     }
     //--->

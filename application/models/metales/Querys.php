@@ -48,7 +48,6 @@ class Querys extends CI_Model
           'detail_fecha'         => $_POST['generar_c_fecha'],
           'detail_status'        => 'abierto',
           'detail_tipo'          => $_POST['generar_c_tipo'],
-          'detail_metal'         => $_POST['generar_c_metal'],
           'detail_grs_original'  => $_POST['generar_c_grs'],
           'detail_grs'           => $_POST['generar_c_grs'],
           'detail_precio'        => $_POST['generar_c_precio']
