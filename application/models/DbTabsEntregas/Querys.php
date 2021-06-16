@@ -93,7 +93,8 @@ class Querys extends CI_Model
                 'entregas_grs_af'           => $_POST['save_grsaf'],
                 'entregas_barra'            => $_POST['save_barra'],
                 'entregas_ley'              => $_POST['save_ley'],
-                'entregas_fino'             => $fino_x
+                'entregas_fino'             => $fino_x,
+                'entregas_fino_original'    => $fino_x
             );
 
             $this->db->insert('tabsentregas',$metales_entregas_data);            
@@ -164,7 +165,8 @@ class Querys extends CI_Model
         `tabsentregas`.entregas_grs_af,
         `tabsentregas`.entregas_barra,
         `tabsentregas`.entregas_ley,
-        `tabsentregas`.entregas_fino,        
+        `tabsentregas`.entregas_fino,
+        `tabsentregas`.entregas_fino_original,
             `saldo`.detail_saldo AS saldo_saldo,
             `saldo`.detail_saldo_actual AS saldo_saldo_actual,
             `clientes`.email,
